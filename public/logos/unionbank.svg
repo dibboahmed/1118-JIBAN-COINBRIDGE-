@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="22" fill="#005CA9" />
+  <!-- Union Bank of Nigeria Iconic Galloping White Stallion -->
+  <g fill="#FFFFFF" transform="translate(18, 18) scale(0.64)">
+    <path
+      d="M85 30C80 25 72 20 62 18C58 14 52 10 46 8C44 7 42 8 43 10C45 13 46 17 44 20C40 22 36 26 34 30C30 31 24 34 20 38C17 41 18 44 22 43C26 42 30 40 33 42C31 46 28 52 24 58C20 64 14 70 8 74C6 75 7 78 10 77C16 75 24 68 28 62C30 68 34 78 38 88C39 90 42 90 42 88C41 80 40 70 41 62C45 61 50 62 55 64C58 68 60 76 62 86C63 88 66 88 66 85C65 77 64 68 64 62C72 58 80 50 86 42C90 37 88 32 85 30ZM50 32C46 30 44 26 46 22C49 22 52 24 54 28C53 30 51 31 50 32Z"
+    />
+    <!-- Forward galloping front legs -->
+    <path d="M72 40L88 28C90 26 92 28 90 30L76 46Z" />
+    <path d="M68 46L82 38C84 36 86 38 84 40L72 52Z" />
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="22" fill="#006A4E" />
+  <circle cx="50" cy="50" r="30" fill="#F42A41" opacity="0.85" />
+  <g fill="#FFFFFF">
+    <!-- Classical Bank Pediment -->
+    <polygon points="50,26 24,38 76,38" />
+    <rect x="22" y="38" width="56" height="4" rx="1" />
+    <!-- 4 Bank Pillars -->
+    <rect x="28" y="44" width="7" height="22" rx="1.5" />
+    <rect x="40" y="44" width="7" height="22" rx="1.5" />
+    <rect x="53" y="44" width="7" height="22" rx="1.5" />
+    <rect x="65" y="44" width="7" height="22" rx="1.5" />
+    <!-- Base plinths -->
+    <rect x="20" y="68" width="60" height="4" rx="1" />
+    <rect x="16" y="73" width="68" height="5" rx="1.5" />
+  </g>
+  <!-- Central Gold Star -->
+  <polygon points="50,47 52,53 58,53 53,57 55,63 50,59 45,63 47,57 42,53 48,53" fill="#FBBF24" />
+</svg>

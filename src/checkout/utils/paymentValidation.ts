@@ -148,9 +148,15 @@ export function validatePaymentAccount(
     return { isValid: true };
   }
 
-  // 3. NIGERIA (Bank transfer, PalmPay, OPay, Kuda Bank)
+  // 3. NIGERIA (Bank transfer, PalmPay, OPay, Kuda Bank, Union Bank)
   if (c === 'ng' || c === 'ngn' || c === 'nigeria') {
-    if (m.includes('palmpay') || m.includes('opay') || m.includes('kuda') || m.includes('bank')) {
+    if (
+      m.includes('palmpay') ||
+      m.includes('opay') ||
+      m.includes('kuda') ||
+      m.includes('union') ||
+      m.includes('bank')
+    ) {
       const is10Digit = digitsOnly.length === 10;
       let ngDigits = digitsOnly;
       if (ngDigits.startsWith('234') && ngDigits.length >= 12) {

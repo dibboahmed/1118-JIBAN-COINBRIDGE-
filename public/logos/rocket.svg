@@ -1,5 +1,30 @@
-<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="100" height="100" rx="20" fill="#8C3494" />
-  <path d="M50 20L66 44H58V72H42V44H34L50 20Z" fill="#FFFFFF" />
-  <circle cx="50" cy="80" r="4" fill="#FBBF24" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="22" fill="#7B287D" />
+  <defs>
+    <linearGradient id="rocketFlame" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#FFF" />
+      <stop offset="40%" stopColor="#F58220" />
+      <stop offset="100%" stopColor="#ED1C24" />
+    </linearGradient>
+  </defs>
+  <!-- Angled Rocket Launching to Top-Right -->
+  <g transform="translate(4, -2)">
+    <!-- Exhaust Thrust Flame -->
+    <path
+      d="M36 64L24 76C24 76 30 73 34 76C37 79 36 86 36 86C38 82 44 79 46 76C48 73 54 75 54 75L44 64Z"
+      fill="url(#rocketFlame)"
+    />
+    <!-- Left Fin -->
+    <path d="M34 50L22 62L34 62Z" fill="#FFFFFF" opacity="0.9" />
+    <!-- Right Fin -->
+    <path d="M52 42L66 48L54 58Z" fill="#FFFFFF" opacity="0.9" />
+    <!-- Center Fuselage -->
+    <path
+      d="M58 20C58 20 64 26 62 34L44 62L36 56L50 28C54 22 58 20 58 20Z"
+      fill="#FFFFFF"
+    />
+    <!-- Porthole Window -->
+    <circle cx="51" cy="35" r="3.5" fill="#7B287D" />
+    <circle cx="52" cy="34" r="1.2" fill="#FFFFFF" />
+  </g>
 </svg>

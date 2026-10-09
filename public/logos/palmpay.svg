@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="22" fill="#5400FF" />
+  <defs>
+    <linearGradient id="palmGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#25F49B" />
+      <stop offset="100%" stopColor="#00D287" />
+    </linearGradient>
+  </defs>
+  <!-- PalmPay Iconic Smiling Palm/Hand -->
+  <g transform="translate(16, 20)">
+    <!-- Base palm curve -->
+    <path
+      d="M10 38C10 50 20 60 34 60C48 60 58 50 58 38C58 26 48 18 34 18C20 18 10 26 10 38Z"
+      fill="url(#palmGreen)"
+    />
+    <!-- White Inner Smile / Coin Cradle -->
+    <path
+      d="M20 38C20 45 26 51 34 51C42 51 48 45 48 38C48 31 42 27 34 27C26 27 20 31 20 38Z"
+      fill="#5400FF"
+    />
+    <!-- White Coin / Heart Emblem -->
+    <circle cx="34" cy="38" r="7" fill="#FFFFFF" />
+    <!-- 4 Leaf/Finger Petals on Top -->
+    <ellipse cx="22" cy="14" rx="4" ry="7" transform="rotate(-25 22 14)" fill="url(#palmGreen)" />
+    <ellipse cx="30" cy="9" rx="4" ry="8" transform="rotate(-8 30 9)" fill="url(#palmGreen)" />
+    <ellipse cx="38" cy="9" rx="4" ry="8" transform="rotate(8 38 9)" fill="url(#palmGreen)" />
+    <ellipse cx="46" cy="14" rx="4" ry="7" transform="rotate(25 46 14)" fill="url(#palmGreen)" />
+  </g>
+</svg>

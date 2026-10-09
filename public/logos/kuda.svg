@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="22" fill="#40196D" />
+  <!-- Kuda Iconic Ribbon 'K' Logo -->
+  <g fill="#FFFFFF">
+    <!-- Left vertical bar with rounded ends -->
+    <rect x="24" y="24" width="13" height="52" rx="6.5" />
+    <!-- Top-right arm -->
+    <path
+      d="M48 48L64 29C66 26.5 70 26 73 28C76 30.5 76 34.5 73 37L56 54L48 48Z"
+    />
+    <!-- Bottom-right leg -->
+    <path
+      d="M44 48L66 71C68.5 73.5 72.5 73.5 75 71C77.5 68.5 77.5 64.5 75 62L54 42L44 48Z"
+    />
+    <!-- Center junction fold cap -->
+    <circle cx="49" cy="50" r="6.5" />
+  </g>
+</svg>
