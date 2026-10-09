@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>CoinBridge</title>
+    <meta name="description" content="Select country and local currency, send via USDT, and receive funds directly to bank or mobile wallet." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="CoinBridge" />
+    <meta property="og:description" content="Select country and local currency, send via USDT, and receive funds directly to bank or mobile wallet." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://coin-bridge.vercel.app" />
+    <link rel="canonical" href="https://coin-bridge.vercel.app" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CoinBridge" />
+    <meta name="twitter:description" content="Select country and local currency, send via USDT, and receive funds directly to bank or mobile wallet." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+      // Filter out known benign Firebase Auth race-condition assertion on slow mobile connections / popup closure
+      window.addEventListener('unhandledrejection', function(event) {
+        var reason = event && event.reason;
+        var msg = (reason && (reason.message || reason.toString())) || '';
+        if (typeof msg === 'string' && msg.indexOf('Pending promise was never set') !== -1) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+      window.addEventListener('error', function(event) {
+        var msg = (event && (event.message || (event.error && event.error.message))) || '';
+        if (typeof msg === 'string' && msg.indexOf('Pending promise was never set') !== -1) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

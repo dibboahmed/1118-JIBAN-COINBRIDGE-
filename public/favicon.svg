@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <rect width="40" height="40" rx="12" fill="#1b2230" />
+  <defs>
+    <linearGradient id="emeraldGradFav" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#34d399" />
+      <stop offset="100%" stopColor="#059669" />
+    </linearGradient>
+    <linearGradient id="goldGradFav" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#fbbf24" />
+      <stop offset="100%" stopColor="#ea580c" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M15 11C9.5 11 5 15.5 5 21C5 26.5 9.5 31 15 31C19.5 31 23 27.5 25 23"
+    stroke="url(#emeraldGradFav)"
+    strokeWidth="3.6"
+    strokeLinecap="round"
+  />
+  <path
+    d="M25 29C30.5 29 35 24.5 35 19C35 13.5 30.5 9 25 9C20.5 9 17 12.5 15 17"
+    stroke="url(#goldGradFav)"
+    strokeWidth="3.6"
+    strokeLinecap="round"
+  />
+  <rect
+    x="16.5"
+    y="16.5"
+    width="7"
+    height="7"
+    rx="2"
+    transform="rotate(45 20 20)"
+    fill="#ffffff"
+  />
+  <circle cx="20" cy="20" r="1.6" fill="#1b2230" />
+</svg>

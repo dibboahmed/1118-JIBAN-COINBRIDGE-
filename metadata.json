@@ -1,0 +1,6 @@
+{
+  "name": "CoinBridge",
+  "description": "Multi-currency crypto payout checkout and financial settlement platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
