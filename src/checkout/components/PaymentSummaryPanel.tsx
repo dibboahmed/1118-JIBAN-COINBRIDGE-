@@ -6,6 +6,7 @@ import { UsdtWithNetworkBadge, getNetworkShortName, NetworkIcon } from './Networ
 import { CountryFlag } from './CountryFlag';
 import { MethodIcon } from './PaymentMethodModal';
 import { LiveMarketMap, LiveMarketData } from '../utils/cryptoRates';
+import { getSavedPaymentMeta } from '../services/accountStorage';
 
 function getCountryCode(code: string): string {
   const c = (code || '').toUpperCase();
@@ -16,8 +17,9 @@ function getCountryCode(code: string): string {
   return 'bd';
 }
 
-function getMethodIconType(methodName: string): string {
+function getMethodIconType(methodName: string, countryCode?: string): string {
   const m = (methodName || '').toLowerCase();
+  const c = (countryCode || '').toLowerCase();
   if (m.includes('bkash')) return 'bkash';
   if (m.includes('nagad')) return 'nagad';
   if (m.includes('rocket')) return 'rocket';
@@ -28,9 +30,16 @@ function getMethodIconType(methodName: string): string {
   if (m.includes('palmpay') || m.includes('palm pay')) return 'palmpay';
   if (m.includes('opay')) return 'opay';
   if (m.includes('kuda')) return 'kuda';
+  if (m.includes('access bank') || m.includes('access')) return 'access_bank';
   if (m.includes('union bank') || m.includes('union')) return 'union_bank';
   if (m.includes('upi')) return 'upi';
-  if (m.includes('bank') || m.includes('ach') || m.includes('swift')) return 'bank';
+  if (m.includes('bank') || m.includes('ach') || m.includes('swift')) {
+    if (c === 'bd' || c === 'bdt' || c === 'bangladesh') return 'bank_bd';
+    if (c === 'ng' || c === 'ngn' || c === 'nigeria') return 'nigerian_bank';
+    if (c === 'global' || c === 'us' || c === 'usd') return 'bank_usd';
+    if (c === 'in' || c === 'inr' || c === 'india') return 'bank_in';
+    return 'bank';
+  }
   return 'wallet';
 }
 
@@ -120,6 +129,9 @@ export function PaymentSummaryPanel({
       : totalCountryAmount.toFixed(2);
 
   const countryCode = getCountryCode(selectedFiatCurrency.code);
+  const savedMeta = useMemo(() => {
+    return getSavedPaymentMeta(selectedPaymentMethod);
+  }, [selectedPaymentMethod]);
 
   const handleCopyAccount = () => {
     if (!receivingAccountNumber) return;
@@ -265,15 +277,60 @@ export function PaymentSummaryPanel({
           <span>Payment receive method</span>
           <span className="font-semibold text-[#0F172A] flex items-center space-x-1.5">
             <MethodIcon
-              iconType={getMethodIconType(selectedPaymentMethod)}
+              iconType={getMethodIconType(selectedPaymentMethod, countryCode)}
               name={selectedPaymentMethod}
+              countryCode={countryCode}
               className="w-4.5 h-4.5 rounded-md shrink-0 text-[10px]"
             />
             <span>
-              {selectedPaymentMethod} {countryCode === 'bd' ? `(${receivingAccountType})` : ''}
+              {selectedPaymentMethod}{' '}
+              {receivingAccountType && receivingAccountType !== 'Bank'
+                ? `(${receivingAccountType})`
+                : countryCode === 'bd'
+                ? `(${receivingAccountType || 'Personal'})`
+                : ''}
             </span>
           </span>
         </div>
+
+        {((receivingAccountType && receivingAccountType !== 'Bank') ||
+          (savedMeta?.accountType && savedMeta.accountType !== 'Bank')) && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Account type</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
+              {receivingAccountType && receivingAccountType !== 'Bank'
+                ? receivingAccountType
+                : savedMeta?.accountType}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.bankName && savedMeta.bankName.toLowerCase() !== selectedPaymentMethod.toLowerCase() && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Bank name</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
+              {savedMeta.bankName}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.accountHolderName && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Customer name</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
+              {savedMeta.accountHolderName}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.branchName && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Bank branch</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
+              {savedMeta.branchName}
+            </span>
+          </div>
+        )}
 
         <div className="flex items-center justify-between text-[#7E8B9B] pt-2 border-t border-slate-200/60">
           <span>Receiving account number</span>

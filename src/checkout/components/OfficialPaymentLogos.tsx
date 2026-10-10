@@ -10,6 +10,7 @@ interface OfficialLogoImgProps {
   className?: string;
   fallback: ReactNode;
   bgClass?: string;
+  imgPadding?: string;
 }
 
 function OfficialLogoImage({
@@ -19,6 +20,7 @@ function OfficialLogoImage({
   className = 'w-8 h-8',
   fallback,
   bgClass = 'bg-white',
+  imgPadding = 'p-0.5',
 }: OfficialLogoImgProps) {
   const [index, setIndex] = useState(0);
   const [failed, setFailed] = useState(false);
@@ -30,13 +32,13 @@ function OfficialLogoImage({
   if (!failed && index < urls.length) {
     return (
       <div
-        className={`rounded-xl ${bgClass} flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 aspect-square p-0.5 ${className}`}
+        className={`rounded-xl ${bgClass} flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 aspect-square ${imgPadding} ${className}`}
         style={dimensionStyle}
       >
         <img
           src={urls[index]}
           alt={alt}
-          className="w-full h-full object-contain select-none"
+          className="w-full h-full object-contain select-none pointer-events-none"
           onError={() => {
             if (index + 1 < urls.length) {
               setIndex((prev) => prev + 1);
@@ -57,11 +59,8 @@ function OfficialLogoImage({
 // 1. BANGLADESH OFFICIAL PAYMENT LOGOS
 // =============================================================
 
-const BKASH_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/BKash_Logo.svg/512px-BKash_Logo.svg.png',
-  'https://raw.githubusercontent.com/redx-dev/payment-logos/main/bkash.png',
-  'https://assets.stickpng.com/images/627a20c326084992661081da.png',
-];
+// Official bKash (বিকাশ) Logo
+const BKASH_URLS = ['/logos/bkash.png', '/logos/bkash.svg'];
 
 export function OfficialBkashLogo({
   className = 'w-8 h-8',
@@ -80,16 +79,14 @@ export function OfficialBkashLogo({
       style={dimensionStyle}
       title="bKash (Official)"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="56,20 86,28 62,40" fill="#FFFFFF" />
-        <circle cx="68" cy="27" r="2" fill="#E2136E" />
-        <polygon points="54,32 78,10 84,16 58,40" fill="#FFFFFF" opacity="0.95" />
-        <polygon points="54,32 74,12 64,38" fill="#FCE4EC" opacity="0.4" />
-        <polygon points="36,42 64,40 50,70 34,54" fill="#FFFFFF" />
-        <polygon points="36,42 48,24 60,38" fill="#FFFFFF" opacity="0.9" />
-        <polygon points="18,58 38,48 28,80" fill="#FFFFFF" />
-        <polygon points="24,54 36,50 30,72" fill="#FCE4EC" opacity="0.3" />
-        <polygon points="50,42 60,40 48,62" fill="#C2185B" opacity="0.3" />
+      <svg viewBox="68 18 27 24" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FFFFFF" d="m78.08 29.42-7.62-9.35.03-.07 9.98 1.14z" />
+        <path fill="#FFFFFF" d="m78.48 29.49 2.4-8.32 7.29 9.7-.04.07z" />
+        <path fill="#FFFFFF" d="m78.5 29.9 9.24 1.4.01.09-7.97 3.81z" />
+        <path fill="#FFFFFF" opacity="0.9" d="m75.05 39.96 3-10.08q.08.15.1.23l1.42 6.11q.08.28-.17.46l-4.1 3.18-.2.14q0-.03-.05-.04" />
+        <path fill="#FFFFFF" d="M85.69 27c1.6-.29 3.16-.55 4.79-.83l-1.83 4.75z" />
+        <path fill="#FFFFFF" opacity="0.95" d="m81.05 35 7.15-3.47.05.04-.27.78a.3.3 0 0 1-.17.13l-6.67 2.56h-.06zm11.69-6.84H90.1l.71-1.85 1.97 1.77z" />
+        <path fill="#FFFFFF" opacity="0.85" d="m74.22 25.38-4.06-3.67.03-.07h1.03c.05 0 .11.07.15.11l2.86 3.5.04.1z" />
       </svg>
     </div>
   );
@@ -101,15 +98,14 @@ export function OfficialBkashLogo({
       size={size}
       className={className}
       fallback={vectorFallback}
-      bgClass="bg-[#E2136E]"
+      bgClass="bg-white border border-slate-100"
+      imgPadding="p-1"
     />
   );
 }
 
-const NAGAD_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Nagad_Logo.svg/512px-Nagad_Logo.svg.png',
-  'https://raw.githubusercontent.com/redx-dev/payment-logos/main/nagad.png',
-];
+// Official Nagad (নগদ) Logo
+const NAGAD_URLS = ['/logos/nagad.png', '/logos/nagad.svg'];
 
 export function OfficialNagadLogo({
   className = 'w-8 h-8',
@@ -160,15 +156,14 @@ export function OfficialNagadLogo({
       size={size}
       className={className}
       fallback={vectorFallback}
-      bgClass="bg-white"
+      bgClass="bg-white border border-slate-100"
+      imgPadding="p-1"
     />
   );
 }
 
-const ROCKET_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Rocket_DBBL_logo.png/512px-Rocket_DBBL_logo.png',
-  'https://raw.githubusercontent.com/redx-dev/payment-logos/main/rocket.png',
-];
+// Official DBBL Rocket (রকেট) Logo
+const ROCKET_URLS = ['/logos/rocket.png', '/logos/rocket.svg'];
 
 export function OfficialRocketLogo({
   className = 'w-8 h-8',
@@ -183,32 +178,14 @@ export function OfficialRocketLogo({
 
   const vectorFallback = (
     <div
-      className={`rounded-xl bg-[#7B287D] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
+      className={`rounded-xl bg-[#8C3494] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
       title="Rocket (DBBL)"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="rocketThrustVec" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFF" />
-            <stop offset="35%" stopColor="#F58220" />
-            <stop offset="100%" stopColor="#ED1C24" />
-          </linearGradient>
-        </defs>
-        <g transform="translate(4, -2)">
-          <path
-            d="M36 64L24 76C24 76 30 73 34 76C37 79 36 86 36 86C38 82 44 79 46 76C48 73 54 75 54 75L44 64Z"
-            fill="url(#rocketThrustVec)"
-          />
-          <path d="M34 50L22 62L34 62Z" fill="#FFFFFF" opacity="0.9" />
-          <path d="M52 42L66 48L54 58Z" fill="#FFFFFF" opacity="0.9" />
-          <path
-            d="M58 20C58 20 64 26 62 34L44 62L36 56L50 28C54 22 58 20 58 20Z"
-            fill="#FFFFFF"
-          />
-          <circle cx="51" cy="35" r="3.5" fill="#7B287D" />
-          <circle cx="52" cy="34" r="1.2" fill="#FFFFFF" />
-        </g>
+      <svg viewBox="0 0 200 126" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#FFFFFF" d="M 148.5 16.3 L 119 45.9 L 121.1 62.5 L 126.5 51.1 L 143.3 72.6 L 166.8 0 L 88.5 32.6 L 109.7 43.8 Z" />
+        <path fill="#FFFFFF" d="M 122.9 68.2 C 97.9 68.2 91.9 68.2 91.9 68.2 C 68.2 71.8 65.7 106.3 91.6 110.9 L 122.9 110.9 L 122.9 79.8 C 133.3 80.2 135.5 93.2 127.8 98 C 129.3 99.8 135.5 106.6 135.5 106.6 C 151.9 92.5 142.5 69.3 122.9 68.2 Z" />
+        <path fill="#FFFFFF" d="M 187.8 83.7 L 171.5 95.2 L 186 95.2 C 188.9 95 189 99.3 186 99.6 L 160.9 99.6 L 160.9 79.9 L 199.4 79.9 L 199.4 68.2 C 193.7 68.2 192 44.1 155.7 56.6 C 168.6 57.3 182.4 68.2 182.4 68.2 L 149.5 68.2 L 149.5 111 L 186.5 111 C 194.9 110.8 198.8 104.7 199.7 99.3 C 200.2 90.8 195.1 85.1 187.8 83.7 Z" />
       </svg>
     </div>
   );
@@ -220,10 +197,14 @@ export function OfficialRocketLogo({
       size={size}
       className={className}
       fallback={vectorFallback}
-      bgClass="bg-[#7B287D]"
+      bgClass="bg-[#8C3494]"
+      imgPadding="p-0.5"
     />
   );
 }
+
+// Official Bangladeshi Bank Transfer (Bangladesh Bank BEFTN / NPSB) Logo
+const BANGLADESH_BANK_URLS = ['/logos/bank_bd.svg'];
 
 export function OfficialBangladeshiBankLogo({
   className = 'w-8 h-8',
@@ -236,27 +217,38 @@ export function OfficialBangladeshiBankLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  return (
+  const vectorFallback = (
     <div
       className={`rounded-xl bg-[#006A4E] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
       title="Bangladeshi Bank (BEFTN / NPSB)"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="30" fill="#F42A41" opacity="0.88" />
-        <g fill="#FFFFFF">
-          <polygon points="50,26 24,38 76,38" />
-          <rect x="22" y="38" width="56" height="4" rx="1" />
-          <rect x="28" y="44" width="7" height="22" rx="1.5" />
-          <rect x="40" y="44" width="7" height="22" rx="1.5" />
-          <rect x="53" y="44" width="7" height="22" rx="1.5" />
-          <rect x="65" y="44" width="7" height="22" rx="1.5" />
-          <rect x="20" y="68" width="60" height="4" rx="1" />
-          <rect x="16" y="73" width="68" height="5" rx="1.5" />
-        </g>
-        <polygon points="50,47 52,53 58,53 53,57 55,63 50,59 45,63 47,57 42,53 48,53" fill="#FBBF24" />
+      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="44" stroke="#D97706" strokeWidth="2.5" />
+        <circle cx="50" cy="46" r="25" fill="#F42A41" />
+        <polygon points="50,26 24,38 76,38" fill="#FFFFFF" />
+        <rect x="22" y="38" width="56" height="4" rx="1" fill="#FFFFFF" />
+        <rect x="28" y="44" width="7" height="20" rx="1.5" fill="#FFFFFF" />
+        <rect x="40" y="44" width="7" height="20" rx="1.5" fill="#FFFFFF" />
+        <rect x="53" y="44" width="7" height="20" rx="1.5" fill="#FFFFFF" />
+        <rect x="65" y="44" width="7" height="20" rx="1.5" fill="#FFFFFF" />
+        <rect x="18" y="66" width="64" height="4" rx="1" fill="#FFFFFF" />
+        <rect x="14" y="80" width="72" height="12" rx="6" fill="#064E3B" stroke="#F59E0B" strokeWidth="1" />
+        <text x="50" y="89" fontFamily="sans-serif" fontSize="7" fontWeight="bold" fill="#FBBF24" textAnchor="middle">BEFTN • NPSB</text>
       </svg>
     </div>
+  );
+
+  return (
+    <OfficialLogoImage
+      urls={BANGLADESH_BANK_URLS}
+      alt="Bangladeshi Bank BEFTN NPSB Official Logo"
+      size={size}
+      className={className}
+      fallback={vectorFallback}
+      bgClass="bg-[#006A4E]"
+      imgPadding="p-0.5"
+    />
   );
 }
 
@@ -264,10 +256,8 @@ export function OfficialBangladeshiBankLogo({
 // 2. NIGERIA OFFICIAL PAYMENT LOGOS
 // =============================================================
 
-const PALMPAY_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/PalmPay_logo.svg/512px-PalmPay_logo.svg.png',
-  'https://palmpay.com/static/img/logo.png',
-];
+// Official PalmPay Logo
+const PALMPAY_URLS = ['/logos/palmpay.png', '/logos/palmpay.svg'];
 
 export function OfficialPalmPayLogo({
   className = 'w-8 h-8',
@@ -320,14 +310,13 @@ export function OfficialPalmPayLogo({
       className={className}
       fallback={vectorFallback}
       bgClass="bg-[#5400FF]"
+      imgPadding="p-1"
     />
   );
 }
 
-const OPAY_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/OPay_logo.svg/512px-OPay_logo.svg.png',
-  'https://opayweb.com/static/img/opay-logo.svg',
-];
+// Official OPay Logo
+const OPAY_URLS = ['/logos/opay.svg'];
 
 export function OfficialOpayLogo({
   className = 'w-8 h-8',
@@ -347,8 +336,11 @@ export function OfficialOpayLogo({
       title="OPay"
     >
       <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-2" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="32" stroke="#FFFFFF" strokeWidth="11" />
-        <circle cx="50" cy="50" r="10" fill="#FFFFFF" />
+        <circle cx="50" cy="42" r="26" stroke="#FFFFFF" strokeWidth="8" />
+        <circle cx="50" cy="42" r="7" fill="#FFFFFF" />
+        <text x="50" y="82" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="18" fill="#FFFFFF" textAnchor="middle">
+          OPay
+        </text>
       </svg>
     </div>
   );
@@ -361,14 +353,13 @@ export function OfficialOpayLogo({
       className={className}
       fallback={vectorFallback}
       bgClass="bg-[#00B875]"
+      imgPadding="p-0.5"
     />
   );
 }
 
-const KUDA_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Kuda_Bank_logo.svg/512px-Kuda_Bank_logo.svg.png',
-  'https://kuda.com/static/kuda-logo.svg',
-];
+// Official Kuda Bank Logo
+const KUDA_URLS = ['/logos/kuda.png', '/logos/kuda.svg'];
 
 export function OfficialKudaLogo({
   className = 'w-8 h-8',
@@ -406,13 +397,13 @@ export function OfficialKudaLogo({
       className={className}
       fallback={vectorFallback}
       bgClass="bg-[#40196D]"
+      imgPadding="p-0.5"
     />
   );
 }
 
-const UNION_BANK_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Union_Bank_of_Nigeria_logo.svg/512px-Union_Bank_of_Nigeria_logo.svg.png',
-];
+// Official Union Bank of Nigeria Plc Logo
+const UNION_BANK_URLS = ['/logos/unionbank.png', '/logos/unionbank.svg'];
 
 export function OfficialUnionBankLogo({
   className = 'w-8 h-8',
@@ -431,7 +422,7 @@ export function OfficialUnionBankLogo({
       style={dimensionStyle}
       title="Union Bank of Nigeria"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-2" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5" xmlns="http://www.w3.org/2000/svg">
         <g fill="#FFFFFF" transform="translate(18, 18) scale(0.64)">
           <path
             d="M85 30C80 25 72 20 62 18C58 14 52 10 46 8C44 7 42 8 43 10C45 13 46 17 44 20C40 22 36 26 34 30C30 31 24 34 20 38C17 41 18 44 22 43C26 42 30 40 33 42C31 46 28 52 24 58C20 64 14 70 8 74C6 75 7 78 10 77C16 75 24 68 28 62C30 68 34 78 38 88C39 90 42 90 42 88C41 80 40 70 41 62C45 61 50 62 55 64C58 68 60 76 62 86C63 88 66 88 66 85C65 77 64 68 64 62C72 58 80 50 86 42C90 37 88 32 85 30ZM50 32C46 30 44 26 46 22C49 22 52 24 54 28C53 30 51 31 50 32Z"
@@ -446,14 +437,67 @@ export function OfficialUnionBankLogo({
   return (
     <OfficialLogoImage
       urls={UNION_BANK_URLS}
-      alt="Union Bank Official Logo"
+      alt="Union Bank of Nigeria Official Logo"
       size={size}
       className={className}
       fallback={vectorFallback}
       bgClass="bg-[#005CA9]"
+      imgPadding="p-0.5"
     />
   );
 }
+
+// Official Access Bank Logo
+const ACCESS_BANK_URLS = ['/logos/access_bank.png', '/logos/access_bank.svg'];
+
+export function OfficialAccessBankLogo({
+  className = 'w-8 h-8',
+  size,
+}: {
+  className?: string;
+  size?: number;
+}) {
+  const dimensionStyle = size
+    ? { width: size, height: size, minWidth: size, minHeight: size }
+    : undefined;
+
+  const vectorFallback = (
+    <div
+      className={`rounded-xl bg-[#001D4A] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
+      style={dimensionStyle}
+      title="Access Bank Plc"
+    >
+      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5" xmlns="http://www.w3.org/2000/svg">
+        {/* Background shield/circle accent */}
+        <rect width="100" height="100" rx="20" fill="#001D4A" />
+        {/* Access Bank signature chevrons in bright orange & white */}
+        <g transform="translate(14, 22) scale(0.72)">
+          {/* Left chevron 1 */}
+          <path d="M12 50 L40 18 L52 30 L32 50 L52 70 L40 82 Z" fill="#F58220" />
+          {/* Middle chevron 2 */}
+          <path d="M38 50 L66 18 L78 30 L58 50 L78 70 L66 82 Z" fill="#F7941D" />
+          {/* Right chevron 3 */}
+          <path d="M64 50 L92 18 L104 30 L84 50 L104 70 L92 82 Z" fill="#FFFFFF" />
+        </g>
+      </svg>
+    </div>
+  );
+
+  return (
+    <OfficialLogoImage
+      urls={ACCESS_BANK_URLS}
+      alt="Access Bank Official Logo"
+      size={size}
+      className={className}
+      fallback={vectorFallback}
+      bgClass="bg-[#001D4A]"
+      imgPadding="p-0.5"
+    />
+  );
+}
+
+// Official Nigerian Bank Transfer (NIBSS NIP) Logo
+const NIGERIAN_BANK_URLS = ['/logos/nigerian_bank.png', '/logos/nigerian_bank.svg'];
 
 export function OfficialNigerianBankLogo({
   className = 'w-8 h-8',
@@ -466,11 +510,11 @@ export function OfficialNigerianBankLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  return (
+  const vectorFallback = (
     <div
       className={`rounded-xl bg-[#008751] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
-      title="Nigerian Bank Transfer (NIP)"
+      title="Nigerian Bank Transfer (NIBSS Instant Payments)"
     >
       <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-2" xmlns="http://www.w3.org/2000/svg">
         <polygon points="50,22 22,36 78,36" fill="#FFFFFF" />
@@ -486,16 +530,26 @@ export function OfficialNigerianBankLogo({
       </svg>
     </div>
   );
+
+  return (
+    <OfficialLogoImage
+      urls={NIGERIAN_BANK_URLS}
+      alt="Nigerian Bank Transfer (NIBSS NIP) Official Logo"
+      size={size}
+      className={className}
+      fallback={vectorFallback}
+      bgClass="bg-white border border-slate-100"
+      imgPadding="p-1"
+    />
+  );
 }
 
 // =============================================================
 // 3. GLOBAL USD OFFICIAL PAYMENT LOGOS
 // =============================================================
 
-const AIRTM_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Airtm_logo.svg/512px-Airtm_logo.svg.png',
-  'https://assets.airtm.com/brand/airtm-logo.svg',
-];
+// Official Airtm Logo
+const AIRTM_URLS = ['/logos/airtm.svg'];
 
 export function OfficialAirtmLogo({
   className = 'w-8 h-8',
@@ -510,28 +564,22 @@ export function OfficialAirtmLogo({
 
   const vectorFallback = (
     <div
-      className={`rounded-xl bg-gradient-to-br from-[#00A3FF] to-[#0066F6] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
+      className={`rounded-xl bg-[#0066F6] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
       title="Airtm"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-2" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none">
-          <polygon points="50,22 76,36 76,64 50,78 24,64 24,36" strokeOpacity="0.8" />
-          <line x1="50" y1="22" x2="50" y2="50" />
-          <line x1="76" y1="36" x2="50" y2="50" />
-          <line x1="76" y1="64" x2="50" y2="50" />
-          <line x1="50" y1="78" x2="50" y2="50" />
-          <line x1="24" y1="64" x2="50" y2="50" />
-          <line x1="24" y1="36" x2="50" y2="50" />
-        </g>
-        <circle cx="50" cy="22" r="5" fill="#FFFFFF" />
-        <circle cx="76" cy="36" r="5" fill="#FFFFFF" />
-        <circle cx="76" cy="64" r="5" fill="#FFFFFF" />
-        <circle cx="50" cy="78" r="5" fill="#FFFFFF" />
-        <circle cx="24" cy="64" r="5" fill="#FFFFFF" />
-        <circle cx="24" cy="36" r="5" fill="#FFFFFF" />
-        <circle cx="50" cy="50" r="7" fill="#FFFFFF" />
-        <circle cx="50" cy="50" r="3.5" fill="#0066F6" />
+      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5" xmlns="http://www.w3.org/2000/svg">
+        <path d="M28 46 L42 28 L58 28 L72 46 L62 56 L38 56 Z" stroke="#FFFFFF" strokeWidth="3.5" strokeLinejoin="round" fill="#FFFFFF" fillOpacity="0.2" />
+        <circle cx="28" cy="46" r="4.5" fill="#FFFFFF" />
+        <circle cx="42" cy="28" r="4.5" fill="#FFFFFF" />
+        <circle cx="58" cy="28" r="4.5" fill="#FFFFFF" />
+        <circle cx="72" cy="46" r="4.5" fill="#FFFFFF" />
+        <circle cx="38" cy="56" r="4.5" fill="#FFFFFF" />
+        <circle cx="62" cy="56" r="4.5" fill="#FFFFFF" />
+        <circle cx="50" cy="44" r="6" fill="#FFFFFF" />
+        <text x="50" y="78" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="16" fill="#FFFFFF" textAnchor="middle">
+          airtm
+        </text>
       </svg>
     </div>
   );
@@ -544,9 +592,13 @@ export function OfficialAirtmLogo({
       className={className}
       fallback={vectorFallback}
       bgClass="bg-[#0066F6]"
+      imgPadding="p-0.5"
     />
   );
 }
+
+// Official Global USD Bank Transfer (SWIFT / ACH / Wire) Logo
+const GLOBAL_BANK_URLS = ['/logos/bank_usd.svg'];
 
 export function OfficialGlobalBankLogo({
   className = 'w-8 h-8',
@@ -559,40 +611,41 @@ export function OfficialGlobalBankLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  return (
+  const vectorFallback = (
     <div
-      className={`rounded-xl bg-[#004B87] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
+      className={`rounded-xl bg-[#0A1D37] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
       title="Bank Transfer (SWIFT / ACH Wire)"
     >
-      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-2" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="32" stroke="#38BDF8" strokeWidth="1.5" strokeOpacity="0.5" />
-        <ellipse cx="50" cy="50" rx="16" ry="32" stroke="#38BDF8" strokeWidth="1.5" strokeOpacity="0.5" />
-        <line x1="18" y1="50" x2="82" y2="50" stroke="#38BDF8" strokeWidth="1.5" strokeOpacity="0.5" />
-        <g fill="#FFFFFF">
-          <polygon points="50,22 24,35 76,35" fill="#38BDF8" />
-          <rect x="22" y="35" width="56" height="3" rx="1" />
-          <rect x="28" y="40" width="6" height="24" rx="1" />
-          <rect x="40" y="40" width="6" height="24" rx="1" />
-          <rect x="54" y="40" width="6" height="24" rx="1" />
-          <rect x="66" y="40" width="6" height="24" rx="1" />
-          <rect x="20" y="66" width="60" height="3" rx="1" fill="#38BDF8" />
-          <rect x="16" y="70" width="68" height="4" rx="1" />
-        </g>
-        <circle cx="50" cy="52" r="8" fill="#FBBF24" />
-        <text x="50" y="56" textAnchor="middle" fill="#0F172A" fontSize="11" fontWeight="900" fontFamily="system-ui, sans-serif">$</text>
+      <svg viewBox="0 0 100 100" fill="none" className="w-full h-full p-1.5" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="40" r="22" stroke="#F97316" strokeWidth="2.5" fill="#0F294D" />
+        <ellipse cx="50" cy="33" rx="20" ry="6" stroke="#38BDF8" strokeWidth="1" fill="none" />
+        <line x1="28" y1="40" x2="72" y2="40" stroke="#F97316" strokeWidth="1.5" />
+        <ellipse cx="50" cy="47" rx="20" ry="6" stroke="#38BDF8" strokeWidth="1" fill="none" />
+        <ellipse cx="50" cy="40" rx="12" ry="22" stroke="#38BDF8" strokeWidth="1.2" fill="none" />
+        <text x="50" y="76" fontFamily="system-ui, sans-serif" fontWeight="900" fontSize="13" fill="#FFFFFF" textAnchor="middle" letterSpacing="1.5">
+          SWIFT
+        </text>
       </svg>
     </div>
+  );
+
+  return (
+    <OfficialLogoImage
+      urls={GLOBAL_BANK_URLS}
+      alt="SWIFT Global Wire Bank Transfer Official Logo"
+      size={size}
+      className={className}
+      fallback={vectorFallback}
+      bgClass="bg-[#0A1D37]"
+      imgPadding="p-0.5"
+    />
   );
 }
 
 // =============================================================
 // 4. INDIA OFFICIAL PAYMENT LOGOS
 // =============================================================
-
-const UPI_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/512px-UPI-Logo-vector.svg.png',
-];
 
 export function OfficialUpiLogo({
   className = 'w-8 h-8',
@@ -605,7 +658,7 @@ export function OfficialUpiLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  const vectorFallback = (
+  return (
     <div
       className={`rounded-xl bg-white border border-slate-200/90 text-slate-900 flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
@@ -629,22 +682,7 @@ export function OfficialUpiLogo({
       </svg>
     </div>
   );
-
-  return (
-    <OfficialLogoImage
-      urls={UPI_URLS}
-      alt="UPI Official Logo"
-      size={size}
-      className={className}
-      fallback={vectorFallback}
-      bgClass="bg-white border border-slate-200"
-    />
-  );
 }
-
-const PHONEPE_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png',
-];
 
 export function OfficialPhonePeLogo({
   className = 'w-8 h-8',
@@ -657,7 +695,7 @@ export function OfficialPhonePeLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  const vectorFallback = (
+  return (
     <div
       className={`rounded-xl bg-[#5F259F] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
@@ -679,22 +717,7 @@ export function OfficialPhonePeLogo({
       </svg>
     </div>
   );
-
-  return (
-    <OfficialLogoImage
-      urls={PHONEPE_URLS}
-      alt="PhonePe Official Logo"
-      size={size}
-      className={className}
-      fallback={vectorFallback}
-      bgClass="bg-[#5F259F]"
-    />
-  );
 }
-
-const PAYTM_URLS = [
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png',
-];
 
 export function OfficialPaytmLogo({
   className = 'w-8 h-8',
@@ -707,7 +730,7 @@ export function OfficialPaytmLogo({
     ? { width: size, height: size, minWidth: size, minHeight: size }
     : undefined;
 
-  const vectorFallback = (
+  return (
     <div
       className={`rounded-xl bg-white border border-slate-200/90 flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
@@ -722,17 +745,6 @@ export function OfficialPaytmLogo({
         </text>
       </svg>
     </div>
-  );
-
-  return (
-    <OfficialLogoImage
-      urls={PAYTM_URLS}
-      alt="Paytm Official Logo"
-      size={size}
-      className={className}
-      fallback={vectorFallback}
-      bgClass="bg-white border border-slate-200"
-    />
   );
 }
 
@@ -804,14 +816,17 @@ export function UniversalPaymentLogo({
   iconType,
   className = 'w-8 h-8',
   size,
+  countryCode,
 }: {
   name: string;
   iconType?: string;
   className?: string;
   size?: number;
+  countryCode?: string;
 }) {
   const n = (name || '').toLowerCase().trim();
   const t = (iconType || '').toLowerCase().trim();
+  const c = (countryCode || '').toLowerCase().trim();
 
   // 1. Bangladesh
   if (t === 'bkash' || n.includes('bkash')) {
@@ -824,7 +839,8 @@ export function UniversalPaymentLogo({
     return <OfficialRocketLogo className={className} size={size} />;
   }
   if (
-    (n.includes('bank') && (t.includes('bd') || n.includes('bangladesh') || t === 'bank_bd')) ||
+    t === 'bank_bd' ||
+    ((n.includes('bank') || t === 'bank') && (c === 'bd' || c === 'bdt' || c === 'bangladesh' || n.includes('bangladesh'))) ||
     n.includes('beftn') ||
     n.includes('npsb')
   ) {
@@ -841,12 +857,16 @@ export function UniversalPaymentLogo({
   if (t === 'kuda' || n.includes('kuda')) {
     return <OfficialKudaLogo className={className} size={size} />;
   }
+  if (t === 'access_bank' || t === 'access' || n.includes('access bank') || n.includes('access')) {
+    return <OfficialAccessBankLogo className={className} size={size} />;
+  }
   if (t === 'union_bank' || n.includes('union')) {
     return <OfficialUnionBankLogo className={className} size={size} />;
   }
   if (
     t === 'nigerian_bank' ||
-    (n.includes('bank') && (t.includes('ng') || n.includes('nigeria') || n.includes('nip') || n.includes('nuban') || t === 'bank_transfer'))
+    t === 'bank_transfer' ||
+    ((n.includes('bank') || t === 'bank') && (c === 'ng' || c === 'ngn' || c === 'nigeria' || n.includes('nigeria') || n.includes('nip') || n.includes('nuban')))
   ) {
     return <OfficialNigerianBankLogo className={className} size={size} />;
   }
@@ -856,7 +876,8 @@ export function UniversalPaymentLogo({
     return <OfficialAirtmLogo className={className} size={size} />;
   }
   if (
-    (n.includes('bank') && (t.includes('usd') || n.includes('usd') || n.includes('swift') || n.includes('ach') || n.includes('wire') || t === 'bank_usd')) ||
+    t === 'bank_usd' ||
+    ((n.includes('bank') || t === 'bank') && (c === 'global' || c === 'us' || c === 'usd' || n.includes('usd') || n.includes('swift') || n.includes('wire') || n.includes('ach'))) ||
     n.includes('wire') ||
     n.includes('swift') ||
     n.includes('ach')
@@ -877,9 +898,14 @@ export function UniversalPaymentLogo({
   if (t === 'phonepe' || n.includes('phonepe')) {
     return <OfficialPhonePeLogo className={className} size={size} />;
   }
-  if (n.includes('bank') && (t.includes('in') || n.includes('india') || n.includes('imps') || t === 'bank_in')) {
+  if (t === 'bank_in' || ((n.includes('bank') || t === 'bank') && (c === 'in' || c === 'inr' || c === 'india' || n.includes('india') || n.includes('imps')))) {
     return <OfficialIndianBankLogo className={className} size={size} />;
   }
+
+  // Contextual fallback by country code
+  if (c === 'bd' || c === 'bdt') return <OfficialBangladeshiBankLogo className={className} size={size} />;
+  if (c === 'ng' || c === 'ngn') return <OfficialNigerianBankLogo className={className} size={size} />;
+  if (c === 'in' || c === 'inr') return <OfficialIndianBankLogo className={className} size={size} />;
 
   return <OfficialGlobalBankLogo className={className} size={size} />;
 }

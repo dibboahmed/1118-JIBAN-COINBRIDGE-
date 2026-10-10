@@ -1,19 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Rounded Base with Bangladesh National Green -->
   <rect width="100" height="100" rx="22" fill="#006A4E" />
-  <circle cx="50" cy="50" r="30" fill="#F42A41" opacity="0.85" />
-  <g fill="#FFFFFF">
-    <!-- Classical Bank Pediment -->
-    <polygon points="50,26 24,38 76,38" />
-    <rect x="22" y="38" width="56" height="4" rx="1" />
-    <!-- 4 Bank Pillars -->
-    <rect x="28" y="44" width="7" height="22" rx="1.5" />
-    <rect x="40" y="44" width="7" height="22" rx="1.5" />
-    <rect x="53" y="44" width="7" height="22" rx="1.5" />
-    <rect x="65" y="44" width="7" height="22" rx="1.5" />
-    <!-- Base plinths -->
-    <rect x="20" y="68" width="60" height="4" rx="1" />
-    <rect x="16" y="73" width="68" height="5" rx="1.5" />
+  
+  <!-- Outer Gold Ring -->
+  <circle cx="50" cy="50" r="44" stroke="#D97706" stroke-width="2.5" />
+  <circle cx="50" cy="50" r="41" stroke="#FDE68A" stroke-width="1" stroke-dasharray="3 2" />
+
+  <!-- Inner Red Sun of Bangladesh -->
+  <circle cx="50" cy="46" r="25" fill="#F42A41" />
+
+  <!-- Bangladesh Bank National Shapla (Water Lily) & Paddy Sheaves -->
+  <g fill="#FFFFFF" transform="translate(50, 46)">
+    <!-- Central Shapla Petals -->
+    <path d="M0 -15 C-2 -10 -4 -4 0 2 C4 -4 2 -10 0 -15 Z" fill="#FFFFFF" />
+    <path d="M-3 -11 C-8 -7 -9 0 -4 4 C-3 1 -2 -5 -3 -11 Z" fill="#FDE68A" />
+    <path d="M3 -11 C8 -7 9 0 4 4 C3 1 2 -5 3 -11 Z" fill="#FDE68A" />
+    <path d="M-7 -6 C-13 -2 -12 5 -8 7 C-6 4 -6 0 -7 -6 Z" fill="#FFFFFF" opacity="0.9" />
+    <path d="M7 -6 C13 -2 12 5 8 7 C6 4 6 0 7 -6 Z" fill="#FFFFFF" opacity="0.9" />
+
+    <!-- Water Waves Base -->
+    <path d="M-15 5 C-10 3 -5 7 0 5 C5 3 10 7 15 5 L15 8 C10 10 5 6 0 8 C-5 6 -10 10 -15 8 Z" fill="#FFFFFF" />
+    <path d="M-13 9 C-9 8 -5 11 0 9 C5 8 9 11 13 9 L13 11 C9 12 5 10 0 12 C-5 10 -9 12 -13 11 Z" fill="#FDE68A" />
+
+    <!-- Rice / Wheat ears curving left and right -->
+    <path d="M-16 2 C-18 -5 -14 -12 -9 -16 C-11 -11 -12 -4 -12 2 Z" fill="#FDE68A" />
+    <path d="M16 2 C18 -5 14 -12 9 -16 C11 -11 12 -4 12 2 Z" fill="#FDE68A" />
+
+    <!-- Three-leaf jute plant on top -->
+    <circle cx="0" cy="-18" r="1.5" fill="#FDE68A" />
+    <circle cx="-3" cy="-17" r="1.2" fill="#FDE68A" />
+    <circle cx="3" cy="-17" r="1.2" fill="#FDE68A" />
   </g>
-  <!-- Central Gold Star -->
-  <polygon points="50,47 52,53 58,53 53,57 55,63 50,59 45,63 47,57 42,53 48,53" fill="#FBBF24" />
+
+  <!-- BEFTN / NPSB National Network Badge -->
+  <g transform="translate(50, 84)">
+    <rect x="-38" y="-9" width="76" height="17" rx="8.5" fill="#064E3B" stroke="#F59E0B" stroke-width="1.5" />
+    <text x="0" y="3.5" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="9" fill="#FBBF24" text-anchor="middle" letter-spacing="0.8">
+      BEFTN • NPSB
+    </text>
+  </g>
 </svg>

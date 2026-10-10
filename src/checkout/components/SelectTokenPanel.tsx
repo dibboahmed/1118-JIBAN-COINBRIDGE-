@@ -35,8 +35,9 @@ export function getCountryMinAmount(code: string, paymentMethod?: string): numbe
   return 1;
 }
 
-function getMethodIconType(methodName: string): string {
+function getMethodIconType(methodName: string, countryCode?: string): string {
   const m = (methodName || '').toLowerCase();
+  const c = (countryCode || '').toLowerCase();
   if (m.includes('bkash')) return 'bkash';
   if (m.includes('nagad')) return 'nagad';
   if (m.includes('rocket')) return 'rocket';
@@ -47,9 +48,16 @@ function getMethodIconType(methodName: string): string {
   if (m.includes('palmpay') || m.includes('palm pay')) return 'palmpay';
   if (m.includes('opay')) return 'opay';
   if (m.includes('kuda')) return 'kuda';
+  if (m.includes('access bank') || m.includes('access')) return 'access_bank';
   if (m.includes('union bank') || m.includes('union')) return 'union_bank';
   if (m.includes('upi')) return 'upi';
-  if (m.includes('bank') || m.includes('ach') || m.includes('swift')) return 'bank';
+  if (m.includes('bank') || m.includes('ach') || m.includes('swift')) {
+    if (c === 'bd' || c === 'bdt' || c === 'bangladesh') return 'bank_bd';
+    if (c === 'ng' || c === 'ngn' || c === 'nigeria') return 'nigerian_bank';
+    if (c === 'global' || c === 'us' || c === 'usd') return 'bank_usd';
+    if (c === 'in' || c === 'inr' || c === 'india') return 'bank_in';
+    return 'bank';
+  }
   return 'wallet';
 }
 
@@ -429,13 +437,20 @@ export function SelectTokenPanel({
           >
             <div className="flex items-center space-x-2.5 min-w-0 flex-1">
               <MethodIcon
-                iconType={getMethodIconType(effectivePaymentMethod)}
+                iconType={getMethodIconType(effectivePaymentMethod, countryCode)}
                 name={effectivePaymentMethod}
+                countryCode={countryCode}
                 className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl shrink-0"
               />
               <div className="flex flex-col min-w-0 text-left flex-1">
+                <span className="text-[10px] text-[#64748B] font-medium leading-tight mb-0.5">
+                  Payment Method
+                </span>
                 <span className="text-xs sm:text-[13px] font-bold text-[#0F172A] truncate">
-                  {effectivePaymentMethod}
+                  {effectivePaymentMethod}{' '}
+                  {receivingAccountType && receivingAccountType !== 'Bank'
+                    ? `(${receivingAccountType})`
+                    : ''}
                 </span>
                 {receivingAccountNumber ? (
                   <span className="text-[11px] font-mono text-[#7C3AED] font-semibold truncate">
@@ -464,9 +479,14 @@ export function SelectTokenPanel({
                 size={26}
                 className="w-6.5 h-6.5 shrink-0"
               />
-              <span className="text-xs sm:text-[13px] font-semibold text-[#0F172A] truncate flex-1 text-left">
-                {selectedFiatCurrency.country}
-              </span>
+              <div className="flex flex-col min-w-0 text-left flex-1">
+                <span className="text-[10px] text-[#64748B] font-medium leading-tight mb-0.5">
+                  Country
+                </span>
+                <span className="text-xs sm:text-[13px] font-semibold text-[#0F172A] truncate">
+                  {selectedFiatCurrency.country}
+                </span>
+              </div>
             </div>
             <ChevronDown size={15} className="text-[#F59E0B] shrink-0 ml-1.5" strokeWidth={2.5} />
           </button>

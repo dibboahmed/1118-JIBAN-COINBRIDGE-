@@ -148,14 +148,22 @@ export function validatePaymentAccount(
     return { isValid: true };
   }
 
-  // 3. NIGERIA (Bank transfer, PalmPay, OPay, Kuda Bank, Union Bank)
+  // 3. NIGERIA (Bank transfer, Access bank, kuda bank, kuda, PalmPay, OPay)
   if (c === 'ng' || c === 'ngn' || c === 'nigeria') {
+    if (m.includes('bank') || m.includes('access') || m.includes('kuda')) {
+      if (input.length < 3) {
+        return {
+          isValid: false,
+          errorMessage: 'Please enter a valid bank account number',
+        };
+      }
+      return { isValid: true, detectedType: 'Bank Account' };
+    }
+
     if (
       m.includes('palmpay') ||
       m.includes('opay') ||
-      m.includes('kuda') ||
-      m.includes('union') ||
-      m.includes('bank')
+      m.includes('union')
     ) {
       const is10Digit = digitsOnly.length === 10;
       let ngDigits = digitsOnly;
@@ -167,10 +175,10 @@ export function validatePaymentAccount(
       if (!is10Digit && !is11DigitPhone) {
         return {
           isValid: false,
-          errorMessage: 'Invalid account or phone number! Please enter 10-digit NUBAN or 11-digit mobile number',
+          errorMessage: 'Invalid account or phone number! Please enter 10-digit account or 11-digit mobile number',
         };
       }
-      return { isValid: true, detectedType: is10Digit ? 'NUBAN Account' : 'Nigerian Phone' };
+      return { isValid: true, detectedType: is10Digit ? 'Account Number' : 'Nigerian Phone' };
     }
     return { isValid: true };
   }

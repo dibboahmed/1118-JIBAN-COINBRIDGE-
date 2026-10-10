@@ -32,6 +32,8 @@ export interface SavedAccountData {
   accountNumber: string;
   accountType?: string;
   bankName?: string;
+  accountHolderName?: string;
+  branchName?: string;
   updatedAt: string;
 }
 
@@ -41,7 +43,7 @@ export interface SavedAccountData {
 export function savePaymentAccount(
   methodName: string,
   accountNumber: string,
-  extra?: { accountType?: string; bankName?: string },
+  extra?: { accountType?: string; bankName?: string; accountHolderName?: string; branchName?: string },
   userEmail?: string
 ): void {
   if (!methodName || !accountNumber) return;
@@ -54,6 +56,8 @@ export function savePaymentAccount(
       accountNumber: accountNumber.trim(),
       accountType: extra?.accountType || 'Personal',
       bankName: extra?.bankName,
+      accountHolderName: extra?.accountHolderName,
+      branchName: extra?.branchName,
       updatedAt: new Date().toISOString(),
     };
     localStorage.setItem(storageKey, JSON.stringify(map));
@@ -76,6 +80,23 @@ export function getSavedPaymentAccount(methodName: string, userEmail?: string): 
     return map[normalizedKey]?.accountNumber || '';
   } catch {
     return '';
+  }
+}
+
+/**
+ * Retrieves the complete saved metadata for a payment method
+ */
+export function getSavedPaymentMeta(methodName: string, userEmail?: string): SavedAccountData | null {
+  if (!methodName) return null;
+  try {
+    const storageKey = getAccountsKey(userEmail);
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return null;
+    const map: Record<string, SavedAccountData> = JSON.parse(raw);
+    const normalizedKey = methodName.trim().toLowerCase();
+    return map[normalizedKey] || null;
+  } catch {
+    return null;
   }
 }
 

@@ -20,6 +20,7 @@ import {
   OfficialSolanaLogo,
   OfficialUsdtLogo,
 } from './OfficialTokenLogos';
+import { UniversalPaymentLogo } from './OfficialPaymentLogos';
 
 export interface PaymentNetworkConfig {
   id: 'polygon' | 'bnb' | 'solana';
@@ -449,7 +450,14 @@ export function PaymentQrCodePanel({
 
             <div className="flex items-center justify-between text-slate-600 pt-2 border-t border-slate-100">
               <span>Payment Method</span>
-              <span className="font-bold text-slate-900">{selectedPaymentMethod}</span>
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <UniversalPaymentLogo
+                  name={selectedPaymentMethod}
+                  countryCode={selectedFiatCurrency.code}
+                  className="w-5 h-5 rounded-md shrink-0"
+                />
+                <span>{selectedPaymentMethod}</span>
+              </span>
             </div>
 
             {receivingAccountNumber && (
@@ -578,7 +586,14 @@ export function PaymentQrCodePanel({
 
             <div className="flex items-center justify-between text-slate-600 pt-2 border-t border-slate-100">
               <span>Payment Method</span>
-              <span className="font-bold text-slate-900">{selectedPaymentMethod}</span>
+              <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                <UniversalPaymentLogo
+                  name={selectedPaymentMethod}
+                  countryCode={selectedFiatCurrency.code}
+                  className="w-5 h-5 rounded-md shrink-0"
+                />
+                <span>{selectedPaymentMethod}</span>
+              </span>
             </div>
 
             {receivingAccountNumber && (

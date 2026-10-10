@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { ArrowLeft, Search, ShieldCheck, AlertCircle, X, Building2, Check } from 'lucide-react';
 import { UniversalPaymentLogo } from './OfficialPaymentLogos';
 import { validatePaymentAccount } from '../utils/paymentValidation';
-import { savePaymentAccount, getSavedPaymentAccount } from '../services/accountStorage';
+import { savePaymentAccount, getSavedPaymentAccount, getSavedPaymentMeta } from '../services/accountStorage';
 
 export interface PaymentReceiveMethod {
   id: string;
@@ -55,21 +55,10 @@ export const INDIA_BANKS = [
 ];
 
 export const NIGERIA_BANKS = [
-  'Access Bank',
-  'Guaranty Trust Bank (GTBank)',
-  'Zenith Bank',
-  'First Bank of Nigeria',
-  'United Bank for Africa (UBA)',
-  'Kuda Bank',
-  'Stanbic IBTC Bank',
-  'Fidelity Bank',
-  'Union Bank of Nigeria',
-  'First City Monument Bank (FCMB)',
-  'Sterling Bank',
-  'Wema Bank',
-  'Opay',
-  'PalmPay',
-  'Other Bank',
+  'Access bank',
+  'Bank transfer (Africa)',
+  'kuda bank',
+  'kuda',
 ];
 
 export const GLOBAL_BANKS = [
@@ -127,7 +116,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       badge: 'All Banks',
       feeText: 'Direct bank payout • 0.1 USDT fee',
       brandColor: '#006A4E',
-      iconType: 'bank',
+      iconType: 'bank_bd',
       placeholder: 'Bank Account Number',
       numberLabel: 'Bank Account Number',
     },
@@ -136,13 +125,13 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
     {
       id: 'bank_transfer',
       name: 'Bank transfer',
-      subtitle: 'Direct NIP Settlement to Any Nigerian Bank Account',
+      subtitle: 'Direct Settlement to African Bank Accounts',
       badge: 'Popular',
-      feeText: 'Instant NIP payout • 0.1 USDT fee',
+      feeText: 'Instant payout • 0.1 USDT fee',
       brandColor: '#008751',
       iconType: 'nigerian_bank',
-      placeholder: '0123456789 (10-digit NUBAN)',
-      numberLabel: '10-Digit NUBAN Account Number',
+      placeholder: 'Enter bank account number',
+      numberLabel: 'Bank Account Number',
     },
     {
       id: 'palmpay',
@@ -165,28 +154,6 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       iconType: 'opay',
       placeholder: '080XXXXXXXX (Phone / Account)',
       numberLabel: 'OPay Mobile Number / Account',
-    },
-    {
-      id: 'kuda',
-      name: 'Kuda Bank',
-      subtitle: 'The Bank of the Free (Kuda MFB Account)',
-      badge: 'Direct',
-      feeText: 'Direct Kuda settlement • 0.1 USDT fee',
-      brandColor: '#40196D',
-      iconType: 'kuda',
-      placeholder: '10-digit Kuda account number',
-      numberLabel: '10-Digit Kuda Account Number',
-    },
-    {
-      id: 'union_bank',
-      name: 'Union Bank of Nigeria Plc',
-      subtitle: 'Union Bank of Nigeria Plc NUBAN Account',
-      badge: 'Direct',
-      feeText: 'Direct Union Bank payout • 0.1 USDT fee',
-      brandColor: '#005CA9',
-      iconType: 'union_bank',
-      placeholder: '10-digit Union Bank NUBAN number',
-      numberLabel: '10-Digit Union Bank Account Number',
     },
   ],
   in: [
@@ -241,7 +208,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       badge: '24/7',
       feeText: 'Instant settlement • 0.1 USDT fee',
       brandColor: '#1E3A8A',
-      iconType: 'bank',
+      iconType: 'bank_in',
       placeholder: 'Account Number & IFSC Code',
       numberLabel: 'Bank Account Number & IFSC',
     },
@@ -265,7 +232,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       badge: 'Min $50',
       feeText: 'Direct bank settlement • 1 USDT = 0.83 USD',
       brandColor: '#004B87',
-      iconType: 'bank',
+      iconType: 'bank_usd',
       placeholder: 'IBAN / SWIFT BIC / Routing & Account',
       numberLabel: 'USD Bank Account / IBAN',
     },
@@ -289,7 +256,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       badge: 'Min $50',
       feeText: 'Direct bank settlement • 1 USDT = 0.83 USD',
       brandColor: '#004B87',
-      iconType: 'bank',
+      iconType: 'bank_usd',
       placeholder: 'IBAN / SWIFT BIC / Routing & Account',
       numberLabel: 'USD Bank Account / IBAN',
     },
@@ -300,19 +267,47 @@ export function MethodIcon({
   iconType,
   name,
   className = 'w-8 h-8',
+  countryCode,
 }: {
   iconType: string;
   name: string;
   className?: string;
+  countryCode?: string;
 }) {
   return (
     <UniversalPaymentLogo
       name={name}
       iconType={iconType}
       className={className}
-      size={32}
+      countryCode={countryCode}
     />
   );
+}
+
+export function getMethodIconType(methodName: string, countryCode?: string): string {
+  const m = (methodName || '').toLowerCase();
+  const c = (countryCode || '').toLowerCase();
+  if (m.includes('bkash')) return 'bkash';
+  if (m.includes('nagad')) return 'nagad';
+  if (m.includes('rocket')) return 'rocket';
+  if (m.includes('digital rupee') || m.includes('rupee')) return 'digital_rupee';
+  if (m.includes('paytm')) return 'paytm';
+  if (m.includes('phonepe')) return 'phonepe';
+  if (m.includes('airtm') || m.includes('air tm')) return 'airtm';
+  if (m.includes('palmpay') || m.includes('palm pay')) return 'palmpay';
+  if (m.includes('opay')) return 'opay';
+  if (m.includes('kuda')) return 'kuda';
+  if (m.includes('access bank') || m.includes('access')) return 'access_bank';
+  if (m.includes('union bank') || m.includes('union')) return 'union_bank';
+  if (m.includes('upi')) return 'upi';
+  if (m.includes('bank') || m.includes('ach') || m.includes('swift')) {
+    if (c === 'bd' || c === 'bdt' || c === 'bangladesh') return 'bank_bd';
+    if (c === 'ng' || c === 'ngn' || c === 'nigeria') return 'nigerian_bank';
+    if (c === 'global' || c === 'us' || c === 'usd') return 'bank_usd';
+    if (c === 'in' || c === 'inr' || c === 'india') return 'bank_in';
+    return 'bank';
+  }
+  return 'wallet';
 }
 
 interface PaymentMethodModalProps {
@@ -348,6 +343,7 @@ export function PaymentMethodModal({
   const [bankName, setBankName] = useState<string>('');
   const [customBankName, setCustomBankName] = useState<string>('');
   const [accountHolderName, setAccountHolderName] = useState<string>('');
+  const [accountType, setAccountType] = useState<string>('Savings');
   const [branchName, setBranchName] = useState<string>('');
   const [routingNumber, setRoutingNumber] = useState<string>('');
   const [ifscCode, setIfscCode] = useState<string>('');
@@ -365,19 +361,38 @@ export function PaymentMethodModal({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      const matchingNigeriaBank = NIGERIA_BANKS.find(
+        (b) => b.toLowerCase() === (selectedMethod || '').toLowerCase()
+      );
       const found =
         methods.find((m) => m.name.toLowerCase() === selectedMethod.toLowerCase()) ||
+        (matchingNigeriaBank ? methods.find((m) => m.id === 'bank_transfer') : null) ||
         methods[0];
       setActiveMethod(found);
-      const savedForFound = getSavedPaymentAccount(found.name);
+      const savedForFound = getSavedPaymentAccount(matchingNigeriaBank || found.name);
+      const savedMeta = getSavedPaymentMeta(matchingNigeriaBank || found.name);
       setInputNumber(accountNumber || savedForFound || '');
       setErrorMessage('');
       setSearch('');
       setStep('list');
-      setBankName('');
-      setCustomBankName('');
-      setAccountHolderName('');
-      setBranchName('');
+      const activeBank = matchingNigeriaBank || '';
+      setBankName(activeBank);
+      if (activeBank) {
+        if (activeBank.toLowerCase().includes('access')) {
+          setCustomBankName(savedMeta?.bankName || 'Access Bank');
+        } else if (activeBank.toLowerCase() === 'kuda bank') {
+          setCustomBankName(savedMeta?.bankName || 'Kuda Bank');
+        } else if (activeBank.toLowerCase().includes('africa')) {
+          setCustomBankName(savedMeta?.bankName || '');
+        } else {
+          setCustomBankName(savedMeta?.bankName || '');
+        }
+      } else {
+        setCustomBankName(savedMeta?.bankName || '');
+      }
+      setAccountHolderName(savedMeta?.accountHolderName || '');
+      setBranchName(savedMeta?.branchName || '');
+      setAccountType(savedMeta?.accountType || 'Savings');
       setRoutingNumber('');
       setIfscCode('');
       setSwiftCode('');
@@ -427,60 +442,90 @@ export function PaymentMethodModal({
     setErrorMessage('');
     setStep('enter_number');
     const savedForMethod = getSavedPaymentAccount(method.name);
+    const savedMetaForMethod = getSavedPaymentMeta(method.name);
     setInputNumber(
       savedForMethod ||
       (selectedMethod.toLowerCase() === method.name.toLowerCase() ? accountNumber : '')
     );
-    if (method.id === 'kuda') {
-      setBankName('Kuda Bank');
-    } else if (method.id === 'union_bank') {
-      setBankName('Union Bank of Nigeria Plc');
+    if (savedMetaForMethod?.accountType) {
+      setAccountType(savedMetaForMethod.accountType);
+    } else {
+      setAccountType('Savings');
+    }
+    const matchingNigeriaBank = NIGERIA_BANKS.find(
+      (b) => b.toLowerCase() === (selectedMethod || '').toLowerCase()
+    );
+    if (method.id === 'bank_transfer') {
+      const activeBank = matchingNigeriaBank || '';
+      setBankName(activeBank);
+      if (activeBank.toLowerCase().includes('access')) {
+        setCustomBankName('Access Bank');
+      } else if (activeBank.toLowerCase() === 'kuda bank') {
+        setCustomBankName('Kuda Bank');
+      } else {
+        setCustomBankName('');
+      }
     } else {
       setBankName('');
+      setCustomBankName('');
     }
   };
 
   const handleConfirmNumber = () => {
     // 1. Bank transfer validation and formatting
     if (isBankMethod) {
+      if (!bankName) {
+        setErrorMessage('Please select a payment method');
+        return;
+      }
+
+      const isAfricaTransfer = bankName.toLowerCase().includes('africa');
+      const isAccessBank = bankName.toLowerCase().includes('access');
+      const isKudaBankDropdown = bankName.toLowerCase() === 'kuda bank';
+      const isKudaAccountTypeOnly = bankName.toLowerCase() === 'kuda';
+
       const chosenBank =
-        activeMethod.id === 'kuda'
-          ? 'Kuda Bank'
-          : activeMethod.id === 'union_bank'
-          ? 'Union Bank of Nigeria Plc'
+        isAfricaTransfer
+          ? (customBankName.trim() || 'Bank transfer (Africa)')
+          : isAccessBank
+          ? (customBankName.trim() || 'Access bank')
+          : isKudaBankDropdown
+          ? (customBankName.trim() || 'kuda bank')
+          : isKudaAccountTypeOnly
+          ? 'kuda'
           : bankName === 'Other Bank' || bankName === 'Other International Bank'
           ? customBankName.trim()
-          : bankName.trim();
+          : (customBankName.trim() || bankName.trim());
 
-      if (!chosenBank) {
-        setErrorMessage('Please select or specify your bank name');
+      if (isAfricaTransfer && !customBankName.trim()) {
+        setErrorMessage('Please enter the bank name');
+        return;
+      }
+      if ((bankName === 'Other Bank' || bankName === 'Other International Bank') && !customBankName.trim()) {
+        setErrorMessage('Please specify your bank name');
         return;
       }
       if (!accountHolderName.trim()) {
-        setErrorMessage('Please enter the full account holder (beneficiary) name');
+        setErrorMessage('Please enter the customer / account holder full name');
         return;
       }
       const cleanAcc = inputNumber.trim();
       if (!cleanAcc) {
-        setErrorMessage('Please enter the bank account number / IBAN');
+        setErrorMessage('Please enter the bank account number');
         return;
       }
-      if (
-        (code === 'ng' ||
-          activeMethod.id === 'bank_transfer' ||
-          activeMethod.id === 'kuda' ||
-          activeMethod.id === 'union_bank') &&
-        cleanAcc.length !== 10
-      ) {
-        setErrorMessage('NUBAN account number must be exactly 10 digits');
-        return;
-      }
-      if ((code === 'in' || activeMethod.id === 'bank_in') && !ifscCode.trim()) {
-        setErrorMessage('Please enter the 11-character IFSC code (e.g. HDFC0001234)');
+
+      // Branch name validation for Access bank and kuda bank, and Bangladesh banks
+      if ((isAccessBank || isKudaBankDropdown) && !branchName.trim()) {
+        setErrorMessage('Please enter the bank branch name');
         return;
       }
       if ((code === 'bd' || activeMethod.id === 'bank_bd') && !branchName.trim()) {
         setErrorMessage('Please enter the branch name (e.g. Motijheel, Dhanmondi)');
+        return;
+      }
+      if ((code === 'in' || activeMethod.id === 'bank_in') && !ifscCode.trim()) {
+        setErrorMessage('Please enter the 11-character IFSC code (e.g. HDFC0001234)');
         return;
       }
       if ((code === 'global' || code === 'us' || activeMethod.id === 'bank_usd') && !swiftCode.trim()) {
@@ -488,33 +533,38 @@ export function PaymentMethodModal({
         return;
       }
 
+      // Payment method identifier returned to caller
+      const targetMethodName = bankName;
+
       // Automatically remember bank details
-      savePaymentAccount(activeMethod.name, cleanAcc, {
-        accountType: 'Bank',
+      savePaymentAccount(targetMethodName, cleanAcc, {
+        accountType: isKudaAccountTypeOnly ? accountType : 'Bank',
         bankName: chosenBank,
+        accountHolderName: accountHolderName.trim(),
+        branchName: branchName.trim(),
+      });
+      savePaymentAccount(activeMethod.name, cleanAcc, {
+        accountType: isKudaAccountTypeOnly ? accountType : 'Bank',
+        bankName: chosenBank,
+        accountHolderName: accountHolderName.trim(),
+        branchName: branchName.trim(),
       });
 
-      // Build structured details string
-      let fullDetails = `${chosenBank} | A/C: ${cleanAcc} | Name: ${accountHolderName.trim()}`;
-      if ((code === 'bd' || activeMethod.id === 'bank_bd') && branchName.trim()) {
-        fullDetails += ` | Branch: ${branchName.trim()}`;
-        if (routingNumber.trim()) fullDetails += ` | Routing: ${routingNumber.trim()}`;
-      } else if ((code === 'in' || activeMethod.id === 'bank_in') && ifscCode.trim()) {
-        fullDetails += ` | IFSC: ${ifscCode.trim().toUpperCase()}`;
-      } else if ((code === 'global' || code === 'us' || activeMethod.id === 'bank_usd') && swiftCode.trim()) {
-        fullDetails += ` | SWIFT: ${swiftCode.trim().toUpperCase()}`;
-        if (routingNumber.trim()) fullDetails += ` | ABA: ${routingNumber.trim()}`;
-      }
-
-      onSelectMethod(activeMethod.name, fullDetails, 'Bank');
+      // Return chosen method name (Access bank, Bank transfer (Africa), kuda bank, or kuda)
+      onSelectMethod(targetMethodName, cleanAcc, isKudaAccountTypeOnly ? accountType : 'Bank');
       onClose();
       return;
     }
 
-    // 2. Personal Wallet / Mobile Banking validation (bKash Personal, Nagad, Rocket, UPI, etc.)
+    // 2. Personal Wallet / Mobile Banking validation (bKash Personal, Nagad, Rocket, UPI, OPay, etc.)
     const clean = inputNumber.trim();
+    const isOpay = activeMethod.id === 'opay' || activeMethod.name.toLowerCase().includes('opay');
     if (!clean) {
-      setErrorMessage('Please enter your personal account number');
+      setErrorMessage(
+        isOpay
+          ? 'Please enter your OPay mobile number or account'
+          : 'Please enter your personal account number'
+      );
       return;
     }
     const valResult = validatePaymentAccount(code, activeMethod.id || activeMethod.name, clean);
@@ -523,11 +573,12 @@ export function PaymentMethodModal({
       return;
     }
 
-    // Automatically remember personal account number
-    savePaymentAccount(activeMethod.name, clean, { accountType: 'Personal' });
+    const chosenAccountType = isOpay ? (accountType || 'Savings') : 'Personal';
 
-    // Always strictly Personal account
-    onSelectMethod(activeMethod.name, clean, 'Personal');
+    // Automatically remember account number & metadata
+    savePaymentAccount(activeMethod.name, clean, { accountType: chosenAccountType });
+
+    onSelectMethod(activeMethod.name, clean, chosenAccountType);
     onClose();
   };
 
@@ -617,7 +668,7 @@ export function PaymentMethodModal({
                       }`}
                     >
                       <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 shadow-2xs border border-slate-100 flex items-center justify-center">
-                        <MethodIcon iconType={method.iconType} name={method.name} className="w-9 h-9" />
+                        <MethodIcon iconType={method.iconType} name={method.name} className="w-9 h-9" countryCode={code} />
                       </div>
                       <div className="flex-1 min-w-0 text-left">
                         <div className="flex items-center gap-2">
@@ -649,10 +700,15 @@ export function PaymentMethodModal({
             <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/90 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 shadow-2xs border border-slate-100 flex items-center justify-center">
-                  <MethodIcon iconType={activeMethod.iconType} name={activeMethod.name} className="w-9 h-9" />
+                  <MethodIcon
+                    iconType={bankName ? getMethodIconType(bankName, code) : activeMethod.iconType}
+                    name={bankName || activeMethod.name}
+                    className="w-9 h-9"
+                    countryCode={code}
+                  />
                 </div>
                 <div className="text-left">
-                  <div className="font-extrabold text-sm text-[#0F172A]">{activeMethod.name}</div>
+                  <div className="font-extrabold text-sm text-[#0F172A]">{bankName || activeMethod.name}</div>
                   <div className="text-xs text-[#64748B]">{activeMethod.feeText}</div>
                 </div>
               </div>
@@ -681,19 +737,35 @@ export function PaymentMethodModal({
             {/* A) BANK TRANSFER MULTI-FIELD SYSTEM */}
             {isBankMethod ? (
               <div className="space-y-3 pt-1 text-left">
-                {/* Bank Name Selector */}
+                {/* Payment Method Selector */}
                 {activeMethod.id !== 'kuda' && activeMethod.id !== 'union_bank' && (
                   <div>
                     <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                      Bank Name <span className="text-rose-500">*</span>
+                      Payment Method <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
                       <select
                         value={bankName}
-                        onChange={(e) => setBankName(e.target.value)}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setBankName(val);
+                          if (val.toLowerCase().includes('access')) {
+                            setCustomBankName('Access Bank');
+                          } else if (val.toLowerCase() === 'kuda bank') {
+                            setCustomBankName('Kuda Bank');
+                          } else if (val.toLowerCase().includes('africa')) {
+                            setCustomBankName('');
+                          } else if (val.toLowerCase() === 'kuda') {
+                            setCustomBankName('');
+                          } else if (val === 'Other Bank' || val === 'Other International Bank') {
+                            setCustomBankName('');
+                          } else {
+                            setCustomBankName(val);
+                          }
+                        }}
                         className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] focus:ring-1 focus:ring-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                       >
-                        <option value="">-- Select Bank --</option>
+                        <option value="">-- Select Payment Method --</option>
                         {bankOptions.map((b) => (
                           <option key={b} value={b}>
                             {b}
@@ -704,17 +776,29 @@ export function PaymentMethodModal({
                   </div>
                 )}
 
-                {/* Custom bank name if 'Other Bank' is selected */}
-                {(bankName === 'Other Bank' || bankName === 'Other International Bank') && (
+                {/* Bank Name Input for Bank transfer (Africa), Access bank, Kuda bank, Other Bank */}
+                {(bankName.toLowerCase().includes('africa') ||
+                  bankName.toLowerCase().includes('access') ||
+                  bankName.toLowerCase() === 'kuda bank' ||
+                  bankName === 'Other Bank' ||
+                  bankName === 'Other International Bank') && (
                   <div>
                     <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                      Specify Bank Name <span className="text-rose-500">*</span>
+                      Bank Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={customBankName}
                       onChange={(e) => setCustomBankName(e.target.value)}
-                      placeholder="Enter official bank name"
+                      placeholder={
+                        bankName.toLowerCase().includes('africa')
+                          ? 'Enter bank name (e.g. Zenith Bank, GTBank, UBA)'
+                          : bankName.toLowerCase().includes('access')
+                          ? 'Access Bank'
+                          : bankName.toLowerCase() === 'kuda bank'
+                          ? 'Kuda Bank'
+                          : 'Enter official bank name'
+                      }
                       className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                     />
                   </div>
@@ -723,27 +807,22 @@ export function PaymentMethodModal({
                 {/* Account Holder Name */}
                 <div>
                   <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                    Account Holder (Beneficiary) Full Name <span className="text-rose-500">*</span>
+                    Customer Name (Account Holder) <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={accountHolderName}
                     onChange={(e) => setAccountHolderName(e.target.value)}
-                    placeholder="Full name as registered with the bank"
+                    placeholder="Customer / Account holder full name"
                     className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                   />
                 </div>
 
-                {/* Bank Account Number / NUBAN / IBAN */}
+                {/* Bank Account Number */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-xs font-semibold text-[#0F172A]">
-                      {code === 'ng' || activeMethod.id === 'bank_transfer'
-                        ? '10-Digit NUBAN Account Number'
-                        : code === 'global' || code === 'us'
-                        ? 'Account Number or IBAN'
-                        : 'Bank Account Number'}{' '}
-                      <span className="text-rose-500">*</span>
+                      Bank Account Number <span className="text-rose-500">*</span>
                     </label>
                     <button
                       type="button"
@@ -757,42 +836,60 @@ export function PaymentMethodModal({
                     type="text"
                     value={inputNumber}
                     onChange={(e) => setInputNumber(e.target.value)}
-                    placeholder={
-                      code === 'ng' || activeMethod.id === 'bank_transfer'
-                        ? '10-digit NUBAN number'
-                        : 'Enter bank account number'
-                    }
+                    placeholder="Enter bank account number"
                     className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                   />
                 </div>
 
-                {/* Bangladesh Branch & Routing */}
-                {(code === 'bd' || activeMethod.id === 'bank_bd') && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {/* Account Type for Kuda (kuda option) */}
+                {bankName.toLowerCase() === 'kuda' && (
+                  <div>
+                    <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                      Account Type <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      value={accountType}
+                      onChange={(e) => setAccountType(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                    >
+                      <option value="Savings">Savings Account</option>
+                      <option value="Current">Current Account</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Bank Branch for Access bank, kuda bank, and Bangladesh */}
+                {(bankName.toLowerCase().includes('access') ||
+                  bankName.toLowerCase() === 'kuda bank' ||
+                  code === 'bd' ||
+                  activeMethod.id === 'bank_bd') && (
+                  <div className={`grid grid-cols-1 ${code === 'bd' || activeMethod.id === 'bank_bd' ? 'sm:grid-cols-2' : ''} gap-2.5`}>
                     <div>
                       <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                        Branch Name <span className="text-rose-500">*</span>
+                        Bank Branch <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="text"
                         value={branchName}
                         onChange={(e) => setBranchName(e.target.value)}
-                        placeholder="e.g. Dhanmondi, Gulshan, Motijheel"
+                        placeholder="Enter bank branch"
                         className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                       />
                     </div>
-                    <div>
-                      <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                        Routing Number <span className="text-slate-400 font-normal">(Optional)</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={routingNumber}
-                        onChange={(e) => setRoutingNumber(e.target.value)}
-                        placeholder="9-digit routing"
-                        className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
-                      />
-                    </div>
+                    {(code === 'bd' || activeMethod.id === 'bank_bd') && (
+                      <div>
+                        <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                          Routing Number <span className="text-slate-400 font-normal">(Optional)</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={routingNumber}
+                          onChange={(e) => setRoutingNumber(e.target.value)}
+                          placeholder="9-digit routing"
+                          className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -900,6 +997,25 @@ export function PaymentMethodModal({
                     <span>
                       Valid {countryName} account detected ({liveValidation.detectedType})
                     </span>
+                  </div>
+                )}
+
+                {/* Account Type for OPay */}
+                {(activeMethod.id === 'opay' || activeMethod.name.toLowerCase().includes('opay')) && (
+                  <div className="mt-3">
+                    <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                      Account Type <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      value={accountType}
+                      onChange={(e) => setAccountType(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                    >
+                      <option value="Savings">Savings Account</option>
+                      <option value="Current">Current Account</option>
+                      <option value="Personal">Personal Account</option>
+                      <option value="Merchant">Merchant Account</option>
+                    </select>
                   </div>
                 )}
               </div>
