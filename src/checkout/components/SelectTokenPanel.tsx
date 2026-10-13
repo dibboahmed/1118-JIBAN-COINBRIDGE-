@@ -27,7 +27,7 @@ export function getCountryMinAmount(code: string, paymentMethod?: string): numbe
   if (c === 'NGN') return 4; // Nigeria Min: 4 USDT
   if (c === 'INR') return 2; // India Min: 2 USDT
   if (c === 'USD') {
-    return 20; // Global USD: Min $20 (1 USDT = 0.95 USD)
+    return 20; // Global USD: Min $20 (1 USDT = 0.90 USD)
   }
   return 1;
 }
@@ -128,7 +128,7 @@ export function SelectTokenPanel({
       return 1345.0; // 1 USDT = 1345 NGN (Fixed rate)
     }
     if (selectedFiatCurrency.code === 'USD') {
-      return 0.95; // Global USD: 1 USDT = 0.95 USD
+      return 0.90; // Global USD: 1 USDT = 0.90 USD
     }
     if (liveFiat && liveFiat[selectedFiatCurrency.code]) {
       return liveFiat[selectedFiatCurrency.code];
@@ -364,7 +364,7 @@ export function SelectTokenPanel({
                 </span>
               </div>
               <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-blue-200/60">
-                <div className="text-[13px] font-black text-[#004B87]">1 USDT = 0.95 USD</div>
+                <div className="text-[13px] font-black text-[#004B87]">1 USDT = 0.90 USD</div>
                 <div className="text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Global Direct Settlement</div>
               </div>
             </button>

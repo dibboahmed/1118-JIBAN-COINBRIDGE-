@@ -95,7 +95,7 @@ export function PaymentSummaryPanel({
       return 1345.0; // 1 USDT = 1345 NGN
     }
     if (selectedFiatCurrency.code === 'USD') {
-      return 0.95; // 1 USDT = 0.95 USD
+      return 0.90; // 1 USDT = 0.90 USD
     }
     if (liveFiat && liveFiat[selectedFiatCurrency.code]) {
       return liveFiat[selectedFiatCurrency.code];

@@ -208,7 +208,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       name: 'Bank Transfer',
       subtitle: 'Direct Wire / SWIFT / ACH / IBAN to USD Bank Account',
       badge: 'Min $20',
-      feeText: 'Direct bank settlement • 1 USDT = 0.95 USD',
+      feeText: 'Direct bank settlement • 1 USDT = 0.90 USD',
       brandColor: '#004B87',
       iconType: 'bank_usd',
       placeholder: 'Enter Bank Account Number',
@@ -221,7 +221,7 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       name: 'Bank Transfer',
       subtitle: 'Direct Wire / SWIFT / ACH / IBAN to USD Bank Account',
       badge: 'Min $20',
-      feeText: 'Direct bank settlement • 1 USDT = 0.95 USD',
+      feeText: 'Direct bank settlement • 1 USDT = 0.90 USD',
       brandColor: '#004B87',
       iconType: 'bank_usd',
       placeholder: 'Enter Bank Account Number',
@@ -883,7 +883,7 @@ export function PaymentMethodModal({
                   </div>
                   <div className="text-xs text-[#64748B]">
                     {isBankUsd
-                      ? 'Direct bank settlement • 1 USDT = 0.95 USD (Min $20)'
+                      ? 'Direct bank settlement • 1 USDT = 0.90 USD (Min $20)'
                       : activeMethod.feeText}
                   </div>
                 </div>
