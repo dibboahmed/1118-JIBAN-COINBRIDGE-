@@ -178,14 +178,14 @@ export function OfficialRocketLogo({
 
   const vectorFallback = (
     <div
-      className={`rounded-xl bg-[#8C3494] text-white flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
+      className={`rounded-xl bg-white border border-slate-100 text-[#8C3494] flex items-center justify-center select-none shadow-xs overflow-hidden shrink-0 ${className}`}
       style={dimensionStyle}
       title="Rocket (DBBL)"
     >
       <svg viewBox="0 0 200 126" fill="none" className="w-full h-full p-1" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#FFFFFF" d="M 148.5 16.3 L 119 45.9 L 121.1 62.5 L 126.5 51.1 L 143.3 72.6 L 166.8 0 L 88.5 32.6 L 109.7 43.8 Z" />
-        <path fill="#FFFFFF" d="M 122.9 68.2 C 97.9 68.2 91.9 68.2 91.9 68.2 C 68.2 71.8 65.7 106.3 91.6 110.9 L 122.9 110.9 L 122.9 79.8 C 133.3 80.2 135.5 93.2 127.8 98 C 129.3 99.8 135.5 106.6 135.5 106.6 C 151.9 92.5 142.5 69.3 122.9 68.2 Z" />
-        <path fill="#FFFFFF" d="M 187.8 83.7 L 171.5 95.2 L 186 95.2 C 188.9 95 189 99.3 186 99.6 L 160.9 99.6 L 160.9 79.9 L 199.4 79.9 L 199.4 68.2 C 193.7 68.2 192 44.1 155.7 56.6 C 168.6 57.3 182.4 68.2 182.4 68.2 L 149.5 68.2 L 149.5 111 L 186.5 111 C 194.9 110.8 198.8 104.7 199.7 99.3 C 200.2 90.8 195.1 85.1 187.8 83.7 Z" />
+        <path fill="#8C3494" d="M 148.5 16.3 L 119 45.9 L 121.1 62.5 L 126.5 51.1 L 143.3 72.6 L 166.8 0 L 88.5 32.6 L 109.7 43.8 Z" />
+        <path fill="#8C3494" d="M 122.9 68.2 C 97.9 68.2 91.9 68.2 91.9 68.2 C 68.2 71.8 65.7 106.3 91.6 110.9 L 122.9 110.9 L 122.9 79.8 C 133.3 80.2 135.5 93.2 127.8 98 C 129.3 99.8 135.5 106.6 135.5 106.6 C 151.9 92.5 142.5 69.3 122.9 68.2 Z" />
+        <path fill="#8C3494" d="M 187.8 83.7 L 171.5 95.2 L 186 95.2 C 188.9 95 189 99.3 186 99.6 L 160.9 99.6 L 160.9 79.9 L 199.4 79.9 L 199.4 68.2 C 193.7 68.2 192 44.1 155.7 56.6 C 168.6 57.3 182.4 68.2 182.4 68.2 L 149.5 68.2 L 149.5 111 L 186.5 111 C 194.9 110.8 198.8 104.7 199.7 99.3 C 200.2 90.8 195.1 85.1 187.8 83.7 Z" />
       </svg>
     </div>
   );
@@ -197,7 +197,7 @@ export function OfficialRocketLogo({
       size={size}
       className={className}
       fallback={vectorFallback}
-      bgClass="bg-[#8C3494]"
+      bgClass="bg-white border border-slate-100"
       imgPadding="p-0.5"
     />
   );

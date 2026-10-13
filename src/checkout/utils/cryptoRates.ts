@@ -240,7 +240,7 @@ export function calculateCryptoAmount(
   } else if (code === 'NGN') {
     fiatUnitsPerUsd = 1345.0; // Fixed rate for NGN payout: 1 USDT = 1345 NGN
   } else if (code === 'USD') {
-    fiatUnitsPerUsd = 1.0;
+    fiatUnitsPerUsd = 0.95; // 1 USDT = 0.95 USD payout rate (User requested 95)
   } else if (liveFiat && liveFiat[code] && Number.isFinite(liveFiat[code]) && liveFiat[code] > 0) {
     fiatUnitsPerUsd = liveFiat[code];
   } else if (cachedFiatRatesFromUsd[code] && cachedFiatRatesFromUsd[code] > 0) {

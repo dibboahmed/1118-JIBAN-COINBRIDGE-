@@ -95,10 +95,6 @@ export function PaymentSummaryPanel({
       return 1345.0; // 1 USDT = 1345 NGN
     }
     if (selectedFiatCurrency.code === 'USD') {
-      const m = (selectedPaymentMethod || '').toLowerCase();
-      if (m.includes('bank')) {
-        return 0.83; // 1 USDT = 0.83 USD
-      }
       return 0.95; // 1 USDT = 0.95 USD
     }
     if (liveFiat && liveFiat[selectedFiatCurrency.code]) {
@@ -329,6 +325,47 @@ export function PaymentSummaryPanel({
             <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
               {savedMeta.branchName}
             </span>
+          </div>
+        )}
+
+        {savedMeta?.ibanNumber && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>IBAN Number</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px] font-mono">
+              {savedMeta.ibanNumber}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.cardNumber && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Card Number</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px] font-mono">
+              {savedMeta.cardNumber}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.mobileNumber && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Mobile Number</span>
+            <span className="font-semibold text-[#0F172A] truncate max-w-[200px]">
+              {savedMeta.mobileNumber}
+            </span>
+          </div>
+        )}
+
+        {savedMeta?.qrCode && (
+          <div className="flex items-center justify-between text-[#7E8B9B]">
+            <span>Attached QR Code</span>
+            <div className="flex items-center space-x-2">
+              <img
+                src={savedMeta.qrCode}
+                alt="Account QR"
+                className="w-7 h-7 object-contain rounded border border-slate-200 bg-white"
+              />
+              <span className="text-xs font-bold text-emerald-600">Attached</span>
+            </div>
           </div>
         )}
 

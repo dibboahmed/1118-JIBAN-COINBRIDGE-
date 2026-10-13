@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowLeft, Search, ShieldCheck, AlertCircle, X, Building2, Check } from 'lucide-react';
+import { ArrowLeft, Search, ShieldCheck, AlertCircle, X, Building2, Check, QrCode, Upload, Image as ImageIcon } from 'lucide-react';
 import { UniversalPaymentLogo } from './OfficialPaymentLogos';
 import { validatePaymentAccount } from '../utils/paymentValidation';
 import { savePaymentAccount, getSavedPaymentAccount, getSavedPaymentMeta } from '../services/accountStorage';
@@ -109,17 +109,6 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
       placeholder: '01XXXXXXXXX or 12-digit number',
       numberLabel: 'Rocket Personal Mobile Number',
     },
-    {
-      id: 'bank_bd',
-      name: 'Bank Transfer',
-      subtitle: 'BEFTN / NPSB Direct Bank Transfer (All Bangladeshi Banks)',
-      badge: 'All Banks',
-      feeText: 'Direct bank payout • 0.1 USDT fee',
-      brandColor: '#006A4E',
-      iconType: 'bank_bd',
-      placeholder: 'Bank Account Number',
-      numberLabel: 'Bank Account Number',
-    },
   ],
   ng: [
     {
@@ -160,105 +149,83 @@ export const COUNTRY_RECEIVE_METHODS: Record<string, PaymentReceiveMethod[]> = {
     {
       id: 'upi',
       name: 'UPI',
-      subtitle: 'Instant UPI ID & VPA Transfer (GPay / Any UPI App)',
+      subtitle: 'Name, UPI ID & QR Code',
       badge: 'Instant',
       feeText: 'Instant payout • 0.1 USDT fee',
       brandColor: '#097939',
       iconType: 'upi',
-      placeholder: 'mobile@upi or username@okhdfcbank',
+      placeholder: 'username@okhdfcbank or mobile@upi',
       numberLabel: 'UPI ID / VPA',
-    },
-    {
-      id: 'digital_rupee',
-      name: 'Digital Rupee',
-      subtitle: 'RBI e₹ (Central Bank Digital Currency Wallet)',
-      badge: 'RBI e₹',
-      feeText: 'Direct CBDC wallet payout • 0.1 USDT fee',
-      brandColor: '#990000',
-      iconType: 'digital_rupee',
-      placeholder: 'e₹ Wallet ID or Registered Mobile',
-      numberLabel: 'Digital Rupee Wallet ID / Phone',
-    },
-    {
-      id: 'paytm',
-      name: 'Paytm',
-      subtitle: 'Paytm Wallet & Payments Bank Account',
-      badge: 'Popular',
-      feeText: 'Instant payout • 0.1 USDT fee',
-      brandColor: '#002E6E',
-      iconType: 'paytm',
-      placeholder: '98XXXXXXXX (10 digits)',
-      numberLabel: 'Paytm Registered Mobile Number',
     },
     {
       id: 'phonepe',
       name: 'PhonePe',
-      subtitle: 'PhonePe Wallet & UPI Mobile Account',
-      badge: 'Fast',
+      subtitle: 'Name, PhonePe Mobile / UPI ID & QR Code',
+      badge: 'Popular',
       feeText: 'Instant payout • 0.1 USDT fee',
       brandColor: '#5F259F',
       iconType: 'phonepe',
-      placeholder: '98XXXXXXXX or mobile@ybl',
-      numberLabel: 'PhonePe Mobile Number / UPI ID',
+      placeholder: '98XXXXXXXX or username@ybl',
+      numberLabel: 'PhonePe Mobile / UPI ID',
+    },
+    {
+      id: 'digital_rupee',
+      name: 'Digital eRupee',
+      subtitle: 'Name, Digital eRupee Wallet VPA & QR Code',
+      badge: 'RBI e₹',
+      feeText: 'Direct CBDC wallet payout • 0.1 USDT fee',
+      brandColor: '#990000',
+      iconType: 'digital_rupee',
+      placeholder: 'Enter Digital eRupee Wallet VPA',
+      numberLabel: 'Digital eRupee Wallet VPA',
+    },
+    {
+      id: 'paytm',
+      name: 'Paytm',
+      subtitle: 'Name, Account Number & QR Code',
+      badge: 'Popular',
+      feeText: 'Instant payout • 0.1 USDT fee',
+      brandColor: '#002E6E',
+      iconType: 'paytm',
+      placeholder: 'Paytm Account / Registered Mobile',
+      numberLabel: 'Paytm Account / Mobile Number',
     },
     {
       id: 'bank_in',
-      name: 'Bank Transfer',
-      subtitle: 'Direct to any Indian Bank Account (IMPS / NEFT)',
+      name: 'Bank Transfer India',
+      subtitle: 'Direct IMPS / NEFT Settlement to Indian Bank',
       badge: '24/7',
       feeText: 'Instant settlement • 0.1 USDT fee',
       brandColor: '#1E3A8A',
       iconType: 'bank_in',
-      placeholder: 'Account Number & IFSC Code',
-      numberLabel: 'Bank Account Number & IFSC',
+      placeholder: 'Account Number',
+      numberLabel: 'Bank Account Number',
     },
   ],
   global: [
     {
-      id: 'airtm',
-      name: 'Airtm',
-      subtitle: 'Instant Airtm USD P2P Wallet Transfer',
-      badge: 'Min $10',
-      feeText: 'Instant transfer • 1 USDT = 0.95 USD',
-      brandColor: '#0084FF',
-      iconType: 'airtm',
-      placeholder: 'user@email.com or @airtm_username',
-      numberLabel: 'Airtm Registered Email / Username',
-    },
-    {
       id: 'bank_usd',
       name: 'Bank Transfer',
-      subtitle: 'Direct Wire / SWIFT / ACH to USD Bank Account',
-      badge: 'Min $50',
-      feeText: 'Direct bank settlement • 1 USDT = 0.83 USD',
+      subtitle: 'Direct Wire / SWIFT / ACH / IBAN to USD Bank Account',
+      badge: 'Min $20',
+      feeText: 'Direct bank settlement • 1 USDT = 0.95 USD',
       brandColor: '#004B87',
       iconType: 'bank_usd',
-      placeholder: 'IBAN / SWIFT BIC / Routing & Account',
-      numberLabel: 'USD Bank Account / IBAN',
+      placeholder: 'Enter Bank Account Number',
+      numberLabel: 'Bank Account Number',
     },
   ],
   us: [
     {
-      id: 'airtm',
-      name: 'Airtm',
-      subtitle: 'Instant Airtm USD P2P Wallet Transfer',
-      badge: 'Min $10',
-      feeText: 'Instant transfer • 1 USDT = 0.95 USD',
-      brandColor: '#0084FF',
-      iconType: 'airtm',
-      placeholder: 'user@email.com or @airtm_username',
-      numberLabel: 'Airtm Registered Email / Username',
-    },
-    {
       id: 'bank_usd',
       name: 'Bank Transfer',
-      subtitle: 'Direct Wire / SWIFT / ACH to USD Bank Account',
-      badge: 'Min $50',
-      feeText: 'Direct bank settlement • 1 USDT = 0.83 USD',
+      subtitle: 'Direct Wire / SWIFT / ACH / IBAN to USD Bank Account',
+      badge: 'Min $20',
+      feeText: 'Direct bank settlement • 1 USDT = 0.95 USD',
       brandColor: '#004B87',
       iconType: 'bank_usd',
-      placeholder: 'IBAN / SWIFT BIC / Routing & Account',
-      numberLabel: 'USD Bank Account / IBAN',
+      placeholder: 'Enter Bank Account Number',
+      numberLabel: 'Bank Account Number',
     },
   ],
 };
@@ -339,7 +306,7 @@ export function PaymentMethodModal({
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [search, setSearch] = useState<string>('');
 
-  // Structured fields for bank transfers
+  // Structured fields for bank transfers & wallet accounts
   const [bankName, setBankName] = useState<string>('');
   const [customBankName, setCustomBankName] = useState<string>('');
   const [accountHolderName, setAccountHolderName] = useState<string>('');
@@ -348,6 +315,11 @@ export function PaymentMethodModal({
   const [routingNumber, setRoutingNumber] = useState<string>('');
   const [ifscCode, setIfscCode] = useState<string>('');
   const [swiftCode, setSwiftCode] = useState<string>('');
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
+  const [cardNumber, setCardNumber] = useState<string>('');
+  const [mobileNumber, setMobileNumber] = useState<string>('');
+  const [ibanNumber, setIbanNumber] = useState<string>('');
+  const qrFileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -374,9 +346,13 @@ export function PaymentMethodModal({
       setInputNumber(accountNumber || savedForFound || '');
       setErrorMessage('');
       setSearch('');
-      setStep('list');
+      if (code === 'global' || code === 'us' || methods.length <= 1) {
+        setStep('enter_number');
+      } else {
+        setStep('list');
+      }
       const activeBank = matchingNigeriaBank || '';
-      setBankName(activeBank);
+      setBankName(savedMeta?.bankName || activeBank || '');
       if (activeBank) {
         if (activeBank.toLowerCase().includes('access')) {
           setCustomBankName(savedMeta?.bankName || 'Access Bank');
@@ -393,6 +369,10 @@ export function PaymentMethodModal({
       setAccountHolderName(savedMeta?.accountHolderName || '');
       setBranchName(savedMeta?.branchName || '');
       setAccountType(savedMeta?.accountType || 'Savings');
+      setQrCodeUrl(savedMeta?.qrCode || '');
+      setCardNumber(savedMeta?.cardNumber || '');
+      setMobileNumber(savedMeta?.mobileNumber || '');
+      setIbanNumber(savedMeta?.ibanNumber || '');
       setRoutingNumber('');
       setIfscCode('');
       setSwiftCode('');
@@ -402,18 +382,44 @@ export function PaymentMethodModal({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen, selectedMethod, accountNumber, methods]);
+  }, [isOpen, selectedMethod, accountNumber, methods, code]);
+
+  const isBankIn = useMemo(() => {
+    return (
+      code === 'in' &&
+      ((activeMethod?.id || '').toLowerCase() === 'bank_in' ||
+        (activeMethod?.name || '').toLowerCase().includes('bank'))
+    );
+  }, [code, activeMethod]);
+
+  const isBankUsd = useMemo(() => {
+    return (
+      (code === 'global' || code === 'us') &&
+      ((activeMethod?.id || '').toLowerCase() === 'bank_usd' ||
+        (activeMethod?.name || '').toLowerCase().includes('bank'))
+    );
+  }, [code, activeMethod]);
+
+  const isIndiaWallet = useMemo(() => {
+    return (
+      code === 'in' &&
+      !isBankIn &&
+      ['upi', 'phonepe', 'digital_rupee', 'paytm'].includes((activeMethod?.id || '').toLowerCase())
+    );
+  }, [code, isBankIn, activeMethod]);
 
   const isBankMethod = useMemo(() => {
     const id = (activeMethod?.id || '').toLowerCase();
     const name = (activeMethod?.name || '').toLowerCase();
     return (
-      id.includes('bank') ||
+      (id.includes('bank') ||
       id === 'kuda' ||
       id === 'union_bank' ||
-      name.includes('bank')
+      name.includes('bank')) &&
+      !isBankIn &&
+      !isBankUsd
     );
-  }, [activeMethod]);
+  }, [activeMethod, isBankIn, isBankUsd]);
 
   const bankOptions = useMemo(() => {
     if (code === 'bd' || activeMethod?.id === 'bank_bd') return BANGLADESH_BANKS;
@@ -426,6 +432,23 @@ export function PaymentMethodModal({
     if (!isOpen || !inputNumber.trim() || isBankMethod) return null;
     return validatePaymentAccount(code, activeMethod?.id || activeMethod?.name || '', inputNumber);
   }, [isOpen, code, activeMethod, inputNumber, isBankMethod]);
+
+  const handleQrFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setErrorMessage('Please upload a valid image file (PNG, JPG, etc.) for the QR code');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setQrCodeUrl(reader.result);
+        setErrorMessage('');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   if (!isOpen) return null;
 
@@ -447,6 +470,9 @@ export function PaymentMethodModal({
       savedForMethod ||
       (selectedMethod.toLowerCase() === method.name.toLowerCase() ? accountNumber : '')
     );
+    setAccountHolderName(savedMetaForMethod?.accountHolderName || '');
+    setBranchName(savedMetaForMethod?.branchName || '');
+    setQrCodeUrl(savedMetaForMethod?.qrCode || '');
     if (savedMetaForMethod?.accountType) {
       setAccountType(savedMetaForMethod.accountType);
     } else {
@@ -455,15 +481,15 @@ export function PaymentMethodModal({
     const matchingNigeriaBank = NIGERIA_BANKS.find(
       (b) => b.toLowerCase() === (selectedMethod || '').toLowerCase()
     );
-    if (method.id === 'bank_transfer') {
-      const activeBank = matchingNigeriaBank || '';
+    if (method.id === 'bank_transfer' || method.id === 'bank_in') {
+      const activeBank = matchingNigeriaBank || (method.id === 'bank_in' ? (savedMetaForMethod?.bankName || '') : '');
       setBankName(activeBank);
       if (activeBank.toLowerCase().includes('access')) {
         setCustomBankName('Access Bank');
       } else if (activeBank.toLowerCase() === 'kuda bank') {
         setCustomBankName('Kuda Bank');
       } else {
-        setCustomBankName('');
+        setCustomBankName(savedMetaForMethod?.bankName || '');
       }
     } else {
       setBankName('');
@@ -472,7 +498,133 @@ export function PaymentMethodModal({
   };
 
   const handleConfirmNumber = () => {
-    // 1. Bank transfer validation and formatting
+    // 1. Bank Transfer India (Only 4 mandatory fields: Customer Name, Account Number, Branch, and Bank Name at the very last!)
+    if (isBankIn) {
+      if (!accountHolderName.trim()) {
+        setErrorMessage('Please enter Customer / Account Holder Name');
+        return;
+      }
+      const cleanAcc = inputNumber.trim();
+      if (!cleanAcc) {
+        setErrorMessage('Please enter Bank Account Number');
+        return;
+      }
+      const valResult = validatePaymentAccount('in', 'bank_in', cleanAcc);
+      if (!valResult.isValid) {
+        setErrorMessage(valResult.errorMessage || 'Invalid Indian bank account number');
+        return;
+      }
+      if (!branchName.trim()) {
+        setErrorMessage('Please enter Bank Branch');
+        return;
+      }
+      const chosenBank = bankName === 'Other Bank' ? customBankName.trim() : (customBankName.trim() || bankName.trim());
+      if (!chosenBank) {
+        setErrorMessage('Please select or enter Bank Name');
+        return;
+      }
+
+      savePaymentAccount('Bank Transfer India', cleanAcc, {
+        accountType: 'Bank',
+        bankName: chosenBank,
+        accountHolderName: accountHolderName.trim(),
+        branchName: branchName.trim(),
+      });
+      savePaymentAccount(activeMethod.name, cleanAcc, {
+        accountType: 'Bank',
+        bankName: chosenBank,
+        accountHolderName: accountHolderName.trim(),
+        branchName: branchName.trim(),
+      });
+
+      onSelectMethod('Bank Transfer India', cleanAcc, 'Bank');
+      onClose();
+      return;
+    }
+
+    // 2. India Wallets: UPI, PhonePe, Digital eRupee, Paytm
+    if (isIndiaWallet) {
+      if (!accountHolderName.trim()) {
+        setErrorMessage('Please enter your Name (Account Holder)');
+        return;
+      }
+      const cleanAcc = inputNumber.trim();
+      if (!cleanAcc) {
+        const fieldName =
+          activeMethod.id === 'upi'
+            ? 'UPI ID / VPA'
+            : activeMethod.id === 'phonepe'
+            ? 'PhonePe Mobile / UPI ID'
+            : activeMethod.id === 'digital_rupee'
+            ? 'Digital eRupee Wallet VPA'
+            : 'Paytm Account / Mobile Number';
+        setErrorMessage(`Please enter your ${fieldName}`);
+        return;
+      }
+      const valResult = validatePaymentAccount('in', activeMethod.id, cleanAcc);
+      if (!valResult.isValid) {
+        setErrorMessage(valResult.errorMessage || 'Invalid account details for India');
+        return;
+      }
+
+      savePaymentAccount(activeMethod.name, cleanAcc, {
+        accountType: 'Personal',
+        accountHolderName: accountHolderName.trim(),
+        qrCode: qrCodeUrl.trim() || undefined,
+        upiId: activeMethod.id === 'upi' || activeMethod.id === 'phonepe' ? cleanAcc : undefined,
+        walletVpa: activeMethod.id === 'digital_rupee' ? cleanAcc : undefined,
+      });
+
+      onSelectMethod(activeMethod.name, cleanAcc, 'Personal');
+      onClose();
+      return;
+    }
+
+    // 2.5. Bank Transfer Global USD validation and saving
+    if (isBankUsd) {
+      if (!accountHolderName.trim()) {
+        setErrorMessage('Please enter the account holder full name');
+        return;
+      }
+      if (!bankName.trim()) {
+        setErrorMessage('Please enter your bank name');
+        return;
+      }
+      const cleanAcc = inputNumber.trim();
+      if (!cleanAcc) {
+        setErrorMessage('Please enter your bank account number');
+        return;
+      }
+      if (!ibanNumber.trim()) {
+        setErrorMessage('Please enter your IBAN number');
+        return;
+      }
+      if (ibanNumber.trim().length < 8) {
+        setErrorMessage('Please enter a valid IBAN number (minimum 8 characters)');
+        return;
+      }
+      if (!branchName.trim()) {
+        setErrorMessage('Please enter the bank branch name');
+        return;
+      }
+
+      savePaymentAccount(activeMethod.name, cleanAcc, {
+        accountType: 'Bank',
+        bankName: bankName.trim(),
+        accountHolderName: accountHolderName.trim(),
+        branchName: branchName.trim(),
+        cardNumber: cardNumber.trim() || undefined,
+        mobileNumber: mobileNumber.trim() || undefined,
+        ibanNumber: ibanNumber.trim(),
+        qrCode: qrCodeUrl.trim() || undefined,
+      });
+
+      onSelectMethod(activeMethod.name, cleanAcc, 'Bank');
+      onClose();
+      return;
+    }
+
+    // 3. Bank transfer validation and formatting (Nigeria / Other)
     if (isBankMethod) {
       if (!bankName) {
         setErrorMessage('Please select a payment method');
@@ -524,14 +676,6 @@ export function PaymentMethodModal({
         setErrorMessage('Please enter the branch name (e.g. Motijheel, Dhanmondi)');
         return;
       }
-      if ((code === 'in' || activeMethod.id === 'bank_in') && !ifscCode.trim()) {
-        setErrorMessage('Please enter the 11-character IFSC code (e.g. HDFC0001234)');
-        return;
-      }
-      if ((code === 'global' || code === 'us' || activeMethod.id === 'bank_usd') && !swiftCode.trim()) {
-        setErrorMessage('Please enter the SWIFT / BIC code');
-        return;
-      }
 
       // Payment method identifier returned to caller
       const targetMethodName = bankName;
@@ -556,7 +700,7 @@ export function PaymentMethodModal({
       return;
     }
 
-    // 2. Personal Wallet / Mobile Banking validation (bKash Personal, Nagad, Rocket, UPI, OPay, etc.)
+    // 4. Personal Wallet / Mobile Banking validation (bKash Personal, Nagad, Rocket, OPay, etc.)
     const clean = inputNumber.trim();
     const isOpay = activeMethod.id === 'opay' || activeMethod.name.toLowerCase().includes('opay');
     if (!clean) {
@@ -619,14 +763,24 @@ export function PaymentMethodModal({
         <div className="flex items-center justify-between mb-3.5">
           <button
             type="button"
-            onClick={step === 'enter_number' ? () => setStep('list') : onClose}
+            onClick={
+              (code === 'global' || code === 'us' || methods.length <= 1)
+                ? onClose
+                : step === 'enter_number'
+                ? () => setStep('list')
+                : onClose
+            }
             className="p-1.5 -ml-1 text-[#E07A28] hover:text-[#C76518] hover:bg-orange-50/60 rounded-xl transition-colors cursor-pointer"
             title="Back"
           >
             <ArrowLeft className="w-5 h-5 text-[#E07A28]" strokeWidth={2.5} />
           </button>
           <h3 className="font-bold text-lg sm:text-xl text-slate-900 tracking-tight text-center flex-1 pr-6">
-            {step === 'list' ? 'Choose payment method' : 'Account details'}
+            {code === 'global' || code === 'us'
+              ? 'USD Bank Account Details'
+              : step === 'list'
+              ? 'Choose payment method'
+              : 'Account details'}
           </h3>
           <div className="w-6" />
         </div>
@@ -701,24 +855,48 @@ export function PaymentMethodModal({
               <div className="flex items-center space-x-3">
                 <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 shadow-2xs border border-slate-100 flex items-center justify-center">
                   <MethodIcon
-                    iconType={bankName ? getMethodIconType(bankName, code) : activeMethod.iconType}
-                    name={bankName || activeMethod.name}
+                    iconType={
+                      isBankUsd
+                        ? 'bank_usd'
+                        : isBankIn
+                        ? 'bank_in'
+                        : (bankName ? getMethodIconType(bankName, code) : activeMethod.iconType)
+                    }
+                    name={
+                      isBankUsd
+                        ? 'Bank Transfer'
+                        : isBankIn
+                        ? 'Bank Transfer India'
+                        : (bankName || activeMethod.name)
+                    }
                     className="w-9 h-9"
                     countryCode={code}
                   />
                 </div>
                 <div className="text-left">
-                  <div className="font-extrabold text-sm text-[#0F172A]">{bankName || activeMethod.name}</div>
-                  <div className="text-xs text-[#64748B]">{activeMethod.feeText}</div>
+                  <div className="font-extrabold text-sm text-[#0F172A]">
+                    {isBankUsd
+                      ? 'USD Bank Transfer (Global USD)'
+                      : isBankIn
+                      ? 'Bank Transfer India'
+                      : (bankName || activeMethod.name)}
+                  </div>
+                  <div className="text-xs text-[#64748B]">
+                    {isBankUsd
+                      ? 'Direct bank settlement • 1 USDT = 0.95 USD (Min $20)'
+                      : activeMethod.feeText}
+                  </div>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setStep('list')}
-                className="text-xs font-bold text-[#E07A28] hover:text-[#C76518] hover:underline cursor-pointer"
-              >
-                Change
-              </button>
+              {methods.length > 1 && !isBankUsd && (
+                <button
+                  type="button"
+                  onClick={() => setStep('list')}
+                  className="text-xs font-bold text-[#E07A28] hover:text-[#C76518] hover:underline cursor-pointer"
+                >
+                  Change
+                </button>
+              )}
             </div>
 
             {/* Strict Personal Notice for bKash, Nagad, Rocket (NO AGENT) */}
@@ -734,8 +912,405 @@ export function PaymentMethodModal({
               </div>
             )}
 
-            {/* A) BANK TRANSFER MULTI-FIELD SYSTEM */}
-            {isBankMethod ? (
+            {/* A) BANK TRANSFER INDIA */}
+            {isBankIn ? (
+              <div className="space-y-3 pt-1 text-left">
+                {/* 1. Customer Name (Account Holder) */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Customer Name (Account Holder) <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={accountHolderName}
+                    onChange={(e) => setAccountHolderName(e.target.value)}
+                    placeholder="Customer / Account holder full name"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 2. Bank Account Number */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-semibold text-[#0F172A]">
+                      Bank Account Number <span className="text-rose-500">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleQuickPaste}
+                      className="text-[11px] font-semibold text-[#E07A28] hover:text-[#C76518] hover:underline cursor-pointer"
+                    >
+                      Paste
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={inputNumber}
+                    onChange={(e) => setInputNumber(e.target.value)}
+                    placeholder="Enter 9-18 digit account number"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800 font-mono"
+                  />
+                </div>
+
+                {/* 3. Bank Branch */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Bank Branch <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={branchName}
+                    onChange={(e) => setBranchName(e.target.value)}
+                    placeholder="Enter bank branch name"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 4. Bank Name (সবার লাস্টে থাকবে - Bank Name at the very last!) */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Bank Name <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    value={bankName}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setBankName(val);
+                      if (val === 'Other Bank') {
+                        setCustomBankName('');
+                      } else {
+                        setCustomBankName(val);
+                      }
+                    }}
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] focus:ring-1 focus:ring-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  >
+                    <option value="">-- Select Bank Name --</option>
+                    {INDIA_BANKS.map((b) => (
+                      <option key={b} value={b}>
+                        {b}
+                      </option>
+                    ))}
+                  </select>
+                  {bankName === 'Other Bank' && (
+                    <div className="mt-2">
+                      <input
+                        type="text"
+                        value={customBankName}
+                        onChange={(e) => setCustomBankName(e.target.value)}
+                        placeholder="Enter official bank name"
+                        className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : isIndiaWallet ? (
+              /* B) INDIA WALLETS: UPI (Name, UPI ID, QR), Digital eRupee (Name, Digital eRupee wallet VPA, QR), Paytm (Name, Account, QR) */
+              <div className="space-y-3 pt-1 text-left">
+                {/* 1. Customer Name (Account Holder) */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Customer Name (Account Holder) <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={accountHolderName}
+                    onChange={(e) => setAccountHolderName(e.target.value)}
+                    placeholder="Account holder full name"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 2. Identifier: UPI ID / Digital eRupee VPA / Paytm Account */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-semibold text-[#0F172A]">
+                      {activeMethod.id === 'upi'
+                        ? 'UPI ID / VPA'
+                        : activeMethod.id === 'phonepe'
+                        ? 'PhonePe Mobile Number / UPI ID'
+                        : activeMethod.id === 'digital_rupee'
+                        ? 'Digital eRupee Wallet VPA'
+                        : 'Paytm Account / Mobile Number'}{' '}
+                      <span className="text-rose-500">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleQuickPaste}
+                      className="text-[11px] font-semibold text-[#E07A28] hover:text-[#C76518] hover:underline cursor-pointer"
+                    >
+                      Paste
+                    </button>
+                  </div>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={inputNumber}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setInputNumber(val);
+                        if (errorMessage) {
+                          const check = validatePaymentAccount('in', activeMethod.id, val);
+                          if (check.isValid) setErrorMessage('');
+                        }
+                      }}
+                      placeholder={activeMethod.placeholder}
+                      className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-semibold text-slate-800 font-mono"
+                    />
+                    {inputNumber && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setInputNumber('');
+                          setErrorMessage('');
+                        }}
+                        className="absolute right-3 w-5 h-5 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-slate-600 cursor-pointer"
+                      >
+                        <X size={12} />
+                      </button>
+                    )}
+                  </div>
+                  {liveValidation?.isValid && (
+                    <div className="mt-1.5 p-2 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-1.5">
+                      <Check size={13} className="shrink-0 text-emerald-600" strokeWidth={3} />
+                      <span>Valid {liveValidation.detectedType}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 3. QR Code Upload & Preview */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-[#0F172A] flex items-center gap-1.5">
+                      <QrCode size={14} className="text-[#097939]" />
+                      <span>QR Code</span>
+                      <span className="text-[11px] text-slate-400 font-normal">(Attach QR image)</span>
+                    </label>
+                    {qrCodeUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setQrCodeUrl('')}
+                        className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  {qrCodeUrl ? (
+                    <div className="relative p-2.5 rounded-xl border border-emerald-300 bg-emerald-50/50 flex items-center gap-3">
+                      <img
+                        src={qrCodeUrl}
+                        alt="Uploaded QR Code"
+                        className="w-14 h-14 object-contain rounded-lg bg-white border border-slate-200"
+                      />
+                      <div className="flex-1 min-w-0 text-left">
+                        <div className="text-xs font-bold text-emerald-800 flex items-center gap-1">
+                          <Check size={13} className="text-emerald-600" />
+                          <span>QR Code Attached</span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          QR code is saved and will be used for recipient payout.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => qrFileInputRef.current?.click()}
+                        className="px-2.5 py-1 text-xs font-semibold text-[#E07A28] bg-white border border-[#F2C091] rounded-lg hover:bg-orange-50 cursor-pointer"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => qrFileInputRef.current?.click()}
+                      className="p-3 border-2 border-dashed border-slate-300 hover:border-[#E07A28] rounded-xl bg-slate-50 hover:bg-orange-50/30 transition-colors flex items-center justify-center gap-2 cursor-pointer text-slate-600"
+                    >
+                      <Upload size={16} className="text-[#E07A28]" />
+                      <span className="text-xs font-semibold text-slate-700">
+                        Click to upload QR code image
+                      </span>
+                      <span className="text-[10px] text-slate-400">(JPG, PNG)</span>
+                    </div>
+                  )}
+                  <input
+                    ref={qrFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleQrFileChange}
+                  />
+                </div>
+              </div>
+            ) : isBankUsd ? (
+              /* B) GLOBAL USD BANK TRANSFER (Name, Bank Name, Account, IBAN, Branch, Card, Mobile, QR) */
+              <div className="space-y-3 pt-1 text-left">
+                {/* 1. Account Holder Full Name - REQUIRED */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Account Holder Full Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={accountHolderName}
+                    onChange={(e) => setAccountHolderName(e.target.value)}
+                    placeholder="Enter account holder full name"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 2. Bank Name (typed by customer, MANDATORY) */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Bank Name <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={bankName}
+                    onChange={(e) => setBankName(e.target.value)}
+                    placeholder="Enter official bank name (e.g. JPMorgan Chase, HSBC, Bank of America)"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 3. Bank Account Number - REQUIRED */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-semibold text-[#0F172A]">
+                      Bank Account Number <span className="text-rose-500">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleQuickPaste}
+                      className="text-[11px] font-semibold text-[#E07A28] hover:text-[#C76518] hover:underline cursor-pointer"
+                    >
+                      Paste
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={inputNumber}
+                    onChange={(e) => setInputNumber(e.target.value)}
+                    placeholder="Enter bank account number"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800 font-mono"
+                  />
+                </div>
+
+                {/* 4. IBAN Number - REQUIRED FOR INTERNATIONAL */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    IBAN (International Bank Account Number) <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={ibanNumber}
+                    onChange={(e) => setIbanNumber(e.target.value.toUpperCase())}
+                    placeholder="e.g. GB29NWBK60161331926819 or US12..."
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-mono font-medium text-slate-800"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-0.5 block">
+                    Required for direct international bank transfer settlement
+                  </span>
+                </div>
+
+                {/* 5. Bank Branch - REQUIRED */}
+                <div>
+                  <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                    Bank Branch <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={branchName}
+                    onChange={(e) => setBranchName(e.target.value)}
+                    placeholder="Enter bank branch name / location"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                  />
+                </div>
+
+                {/* 6. Card Number & 7. Mobile Number - OPTIONAL */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                      Card Number <span className="text-slate-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                      placeholder="Optional card number"
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 focus:border-[#E07A28] rounded-xl text-sm font-mono font-medium text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-[#0F172A] block mb-1">
+                      Mobile Number <span className="text-slate-400 font-normal">(Optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value)}
+                      placeholder="e.g. +1 555-0199"
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
+                    />
+                  </div>
+                </div>
+
+                {/* 8. QR Code - OPTIONAL */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-[#0F172A] flex items-center gap-1.5">
+                      <QrCode size={14} className="text-[#004B87]" />
+                      <span>Bank QR Code</span>
+                      <span className="text-[11px] text-slate-400 font-normal">(Optional)</span>
+                    </label>
+                    {qrCodeUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setQrCodeUrl('')}
+                        className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+
+                  {qrCodeUrl ? (
+                    <div className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src={qrCodeUrl}
+                          alt="Bank QR Preview"
+                          className="w-12 h-12 object-contain rounded-lg border border-slate-200 bg-white"
+                        />
+                        <div>
+                          <p className="text-xs font-bold text-slate-800">QR Code Attached</p>
+                          <p className="text-[11px] text-emerald-600 font-medium">Ready for payout</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => qrFileInputRef.current?.click()}
+                        className="px-2.5 py-1 text-xs font-semibold text-[#004B87] bg-white border border-blue-200 rounded-lg hover:bg-blue-50 cursor-pointer"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => qrFileInputRef.current?.click()}
+                      className="p-3 border-2 border-dashed border-slate-300 hover:border-[#004B87] rounded-xl bg-slate-50 hover:bg-blue-50/30 transition-colors flex items-center justify-center gap-2 cursor-pointer text-slate-600"
+                    >
+                      <Upload size={16} className="text-[#004B87]" />
+                      <span className="text-xs font-semibold text-slate-700">
+                        Upload Bank QR Code (Optional)
+                      </span>
+                      <span className="text-[10px] text-slate-400">(JPG, PNG)</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : isBankMethod ? (
+              /* C) OTHER BANK TRANSFER (Nigeria / Africa / Global) */
               <div className="space-y-3 pt-1 text-left">
                 {/* Payment Method Selector */}
                 {activeMethod.id !== 'kuda' && activeMethod.id !== 'union_bank' && (
@@ -876,71 +1451,11 @@ export function PaymentMethodModal({
                         className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
                       />
                     </div>
-                    {(code === 'bd' || activeMethod.id === 'bank_bd') && (
-                      <div>
-                        <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                          Routing Number <span className="text-slate-400 font-normal">(Optional)</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={routingNumber}
-                          onChange={(e) => setRoutingNumber(e.target.value)}
-                          placeholder="9-digit routing"
-                          className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* India IFSC Code */}
-                {(code === 'in' || activeMethod.id === 'bank_in') && (
-                  <div>
-                    <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                      IFSC Code <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={ifscCode}
-                      onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
-                      placeholder="e.g. HDFC0001234 or SBIN0001234"
-                      className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
-                    />
-                  </div>
-                )}
-
-                {/* Global USD SWIFT & Routing */}
-                {(code === 'global' || code === 'us' || activeMethod.id === 'bank_usd') && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <div>
-                      <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                        SWIFT / BIC Code <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={swiftCode}
-                        onChange={(e) => setSwiftCode(e.target.value.toUpperCase())}
-                        placeholder="8 or 11 character SWIFT"
-                        className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-semibold text-[#0F172A] block mb-1">
-                        Routing (ABA) <span className="text-slate-400 font-normal">(US only)</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={routingNumber}
-                        onChange={(e) => setRoutingNumber(e.target.value)}
-                        placeholder="9-digit routing"
-                        className="w-full px-3.5 py-2.5 bg-white border border-[#F2C091] focus:border-[#E07A28] rounded-xl text-sm font-medium text-slate-800"
-                      />
-                    </div>
                   </div>
                 )}
               </div>
             ) : (
-              /* B) MOBILE WALLET (bKash Personal, Nagad, Rocket, UPI, etc.) */
+              /* D) GENERAL MOBILE WALLET (bKash Personal, Nagad, Rocket, OPay, PalmPay, etc.) */
               <div className="text-left">
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-xs font-semibold text-[#0F172A]">
@@ -1036,11 +1551,18 @@ export function PaymentMethodModal({
                 onClick={handleConfirmNumber}
                 className="w-full py-3 rounded-xl bg-[#E07A28] hover:bg-[#C76518] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-all"
               >
-                {isBankMethod ? (
+                {isBankIn ? (
+                  <>
+                    <Building2 className="w-4.5 h-4.5 text-white/90" />
+                    <span>Confirm Bank Transfer India</span>
+                  </>
+                ) : isBankMethod ? (
                   <>
                     <Building2 className="w-4.5 h-4.5 text-white/90" />
                     <span>Confirm Bank Transfer Details</span>
                   </>
+                ) : isIndiaWallet ? (
+                  <span>Confirm {activeMethod.name} Details</span>
                 ) : (
                   <span>Confirm {activeMethod.name} Personal Account</span>
                 )}

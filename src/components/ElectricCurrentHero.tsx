@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import usdtBridgeHeroImg from '../assets/images/usdt_to_cash_bridge_1791869080260.jpg';
 
 interface ElectricCurrentHeroProps {
   className?: string;
@@ -21,9 +22,9 @@ export function ElectricCurrentHero({ className = '' }: ElectricCurrentHeroProps
       <div
         className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-700 ease-out rounded-3xl lg:rounded-[2.5rem]"
         style={{
-          background: `radial-gradient(600px circle at 50% 50%, rgba(56, 189, 248, ${
+          background: `radial-gradient(600px circle at 50% 50%, rgba(16, 185, 129, ${
             isHovered ? 0.16 : 0.08
-          }), rgba(245, 158, 11, ${isHovered ? 0.12 : 0.05}), transparent 70%)`,
+          }), rgba(56, 189, 248, ${isHovered ? 0.12 : 0.05}), transparent 70%)`,
         }}
       />
 
@@ -32,12 +33,11 @@ export function ElectricCurrentHero({ className = '' }: ElectricCurrentHeroProps
         {/* Photorealistic Hero Image / Aesthetic fallback canvas */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0a0f1d] flex items-center justify-center overflow-hidden">
           <img
-            src="/coin-bridge-hero-real.jpg"
+            src={usdtBridgeHeroImg}
             onError={(e) => {
-              // Graceful fallback to dark cybernetic visual gradient
-              e.currentTarget.style.display = 'none';
+              e.currentTarget.src = '/usdt-cash-bridge.jpg';
             }}
-            alt="CoinBridge Realistic Financial Settlement Architecture"
+            alt="USDT to Local Cash Settlement Bridge"
             referrerPolicy="no-referrer"
             draggable={false}
             onContextMenu={(e) => e.preventDefault()}
@@ -50,21 +50,8 @@ export function ElectricCurrentHero({ className = '' }: ElectricCurrentHeroProps
           />
         </div>
 
-        {/* Ambient Darkened Gradient Scrim for High-Contrast Electric Conduit Clarity */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30" />
-
-        {/* Center Futuristic Graphic if image loads or doesn't */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center p-6 space-y-2 select-none">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-mono font-bold tracking-wider backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              USDT SETTLEMENT RAIL ACTIVE
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-md">
-              Instant Global Liquidity Conduit
-            </div>
-          </div>
-        </div>
+        {/* Ambient Darkened Gradient Scrim */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20" />
 
         {/* ------------------------------------------------------------- */}
         {/* SVG Dynamic Electric Current Conduits */}

@@ -34,6 +34,12 @@ export interface SavedAccountData {
   bankName?: string;
   accountHolderName?: string;
   branchName?: string;
+  qrCode?: string;
+  upiId?: string;
+  walletVpa?: string;
+  cardNumber?: string;
+  mobileNumber?: string;
+  ibanNumber?: string;
   updatedAt: string;
 }
 
@@ -43,7 +49,18 @@ export interface SavedAccountData {
 export function savePaymentAccount(
   methodName: string,
   accountNumber: string,
-  extra?: { accountType?: string; bankName?: string; accountHolderName?: string; branchName?: string },
+  extra?: {
+    accountType?: string;
+    bankName?: string;
+    accountHolderName?: string;
+    branchName?: string;
+    qrCode?: string;
+    upiId?: string;
+    walletVpa?: string;
+    cardNumber?: string;
+    mobileNumber?: string;
+    ibanNumber?: string;
+  },
   userEmail?: string
 ): void {
   if (!methodName || !accountNumber) return;
@@ -52,12 +69,19 @@ export function savePaymentAccount(
     const raw = localStorage.getItem(storageKey);
     const map: Record<string, SavedAccountData> = raw ? JSON.parse(raw) : {};
     const normalizedKey = methodName.trim().toLowerCase();
+    const existing = map[normalizedKey];
     map[normalizedKey] = {
       accountNumber: accountNumber.trim(),
-      accountType: extra?.accountType || 'Personal',
-      bankName: extra?.bankName,
-      accountHolderName: extra?.accountHolderName,
-      branchName: extra?.branchName,
+      accountType: extra?.accountType ?? existing?.accountType ?? 'Personal',
+      bankName: extra?.bankName !== undefined ? extra.bankName : existing?.bankName,
+      accountHolderName: extra?.accountHolderName !== undefined ? extra.accountHolderName : existing?.accountHolderName,
+      branchName: extra?.branchName !== undefined ? extra.branchName : existing?.branchName,
+      qrCode: extra?.qrCode !== undefined ? extra.qrCode : existing?.qrCode,
+      upiId: extra?.upiId !== undefined ? extra.upiId : existing?.upiId,
+      walletVpa: extra?.walletVpa !== undefined ? extra.walletVpa : existing?.walletVpa,
+      cardNumber: extra?.cardNumber !== undefined ? extra.cardNumber : existing?.cardNumber,
+      mobileNumber: extra?.mobileNumber !== undefined ? extra.mobileNumber : existing?.mobileNumber,
+      ibanNumber: extra?.ibanNumber !== undefined ? extra.ibanNumber : existing?.ibanNumber,
       updatedAt: new Date().toISOString(),
     };
     localStorage.setItem(storageKey, JSON.stringify(map));

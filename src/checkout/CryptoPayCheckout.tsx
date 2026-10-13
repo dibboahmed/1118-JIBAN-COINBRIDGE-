@@ -22,7 +22,7 @@ export function getDefaultPaymentMethod(countryCode: string): string {
   if (code === 'BDT') return 'bKash';
   if (code === 'NGN') return 'Bank transfer';
   if (code === 'INR') return 'UPI';
-  if (code === 'USD') return 'Airtm';
+  if (code === 'USD') return 'Bank Transfer';
   return 'bKash';
 }
 

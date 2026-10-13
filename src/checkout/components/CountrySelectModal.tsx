@@ -54,7 +54,7 @@ export const ONLY_SUPPORTED_COUNTRIES: SupportedCountry[] = [
     symbol: '$',
     flag: '🌐',
     rateToUsd: 0.95,
-    minAmount: 10,
+    minAmount: 20,
   },
 ];
 

@@ -114,25 +114,54 @@ export function validatePaymentAccount(
       if (!isUpiId && !isIndianPhone) {
         return {
           isValid: false,
-          errorMessage: 'Invalid Indian UPI ID or mobile number! (e.g. username@upi or 98XXXXXXXX)',
+          errorMessage: 'Invalid UPI ID or mobile number! (e.g. name@okhdfcbank or 98XXXXXXXX@upi)',
         };
       }
       return { isValid: true, detectedType: isUpiId ? 'UPI ID' : 'Indian Mobile' };
     }
 
-    if (m.includes('paytm') || m.includes('phonepe')) {
+    if (m.includes('digital_rupee') || m.includes('rupee') || m.includes('erupee')) {
+      const isVpa = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(input);
+      const isWalletId = /^[a-zA-Z0-9.\-_]{4,64}$/.test(input);
+      if (!isVpa && !isWalletId) {
+        return {
+          isValid: false,
+          errorMessage: 'Invalid Digital eRupee Wallet VPA or Wallet ID! (e.g. name@rbi or wallet_id)',
+        };
+      }
+      return { isValid: true, detectedType: 'Digital eRupee Wallet VPA' };
+    }
+
+    if (m.includes('paytm')) {
       let inDigits = digitsOnly;
       if (inDigits.startsWith('91') && inDigits.length === 12) {
         inDigits = inDigits.slice(2);
       }
       const isIndianPhone = inDigits.length === 10 && /^[6-9]/.test(inDigits);
-      if (!isIndianPhone) {
+      const isPaytmAcc = digitsOnly.length >= 9 && digitsOnly.length <= 18;
+      if (!isIndianPhone && !isPaytmAcc) {
         return {
           isValid: false,
-          errorMessage: 'Invalid Indian mobile number! Must be 10 digits starting with 6-9 (e.g. 98XXXXXXXX)',
+          errorMessage: 'Invalid Paytm account or mobile number! (e.g. 98XXXXXXXX or 10-18 digit account)',
         };
       }
-      return { isValid: true, detectedType: 'Indian Mobile' };
+      return { isValid: true, detectedType: isIndianPhone ? 'Paytm Mobile' : 'Paytm Account' };
+    }
+
+    if (m.includes('phonepe')) {
+      const isUpiId = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/.test(input);
+      let inDigits = digitsOnly;
+      if (inDigits.startsWith('91') && inDigits.length === 12) {
+        inDigits = inDigits.slice(2);
+      }
+      const isIndianPhone = inDigits.length === 10 && /^[6-9]/.test(inDigits);
+      if (!isUpiId && !isIndianPhone) {
+        return {
+          isValid: false,
+          errorMessage: 'Invalid PhonePe mobile number or UPI ID! (e.g. 98XXXXXXXX or user@ybl)',
+        };
+      }
+      return { isValid: true, detectedType: isUpiId ? 'PhonePe UPI ID' : 'PhonePe Mobile' };
     }
 
     if (m.includes('bank')) {
@@ -183,28 +212,16 @@ export function validatePaymentAccount(
     return { isValid: true };
   }
 
-  // 4. GLOBAL USD (Airtm, Bank Transfer)
+  // 4. GLOBAL USD (Bank Transfer only)
   if (c === 'global' || c === 'us' || c === 'usd') {
-    if (m.includes('airtm')) {
-      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
-      const isHandle = input.startsWith('@') && input.length >= 3;
-      if (!isEmail && !isHandle) {
+    if (m.includes('bank') || m === 'bank_usd') {
+      if (input.length < 4 || input.length > 36) {
         return {
           isValid: false,
-          errorMessage: 'Invalid Airtm account! Please enter your registered email or @username',
+          errorMessage: 'Invalid USD bank account number! Must be between 4 and 36 characters',
         };
       }
-      return { isValid: true, detectedType: isEmail ? 'Airtm Email' : 'Airtm Handle' };
-    }
-
-    if (m.includes('bank')) {
-      if (input.length < 6 || input.length > 36) {
-        return {
-          isValid: false,
-          errorMessage: 'Invalid USD bank account or IBAN! Must be between 6 and 36 characters',
-        };
-      }
-      return { isValid: true, detectedType: 'USD Bank Account / IBAN' };
+      return { isValid: true, detectedType: 'USD Bank Account' };
     }
     return { isValid: true };
   }

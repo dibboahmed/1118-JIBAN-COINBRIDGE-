@@ -11,7 +11,7 @@ export interface FiatCurrency {
 export const FIAT_CURRENCIES: FiatCurrency[] = [
   // Top Global & Regional Heavyweights
   { code: 'BDT', symbol: 'Tk', name: 'Bangladeshi Taka', rateToEur: 140.02, rateToUsd: 125.0, flag: '🇧🇩', country: 'Bangladesh' },
-  { code: 'USD', symbol: '$', name: 'Global USD', rateToEur: 1.1399, rateToUsd: 1.0, flag: '🌐', country: 'Global USD' },
+  { code: 'USD', symbol: '$', name: 'Global USD', rateToEur: 1.1399, rateToUsd: 0.95, flag: '🌐', country: 'Global USD' },
   { code: 'INR', symbol: '₹', name: 'Indian Rupee', rateToEur: 109.33, rateToUsd: 90.0, flag: '🇮🇳', country: 'India' },
   { code: 'NGN', symbol: '₦', name: 'Nigerian Naira', rateToEur: 1180.0, rateToUsd: 1345.0, flag: '🇳🇬', country: 'Nigeria' },
   { code: 'EUR', symbol: '€', name: 'Euro', rateToEur: 1, rateToUsd: 0.8773, flag: '🇪🇺', country: 'European Union' },

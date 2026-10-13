@@ -10,6 +10,7 @@ import { UsdtWithNetworkBadge, getNetworkShortName } from './NetworkIcon';
 import { CountryFlag } from './CountryFlag';
 import { LiveMarketMap, LiveMarketData } from '../utils/cryptoRates';
 import { validatePaymentAccount } from '../utils/paymentValidation';
+import { getSavedPaymentMeta } from '../services/accountStorage';
 
 function getCountryCode(code: string): string {
   const c = (code || '').toUpperCase();
@@ -26,11 +27,7 @@ export function getCountryMinAmount(code: string, paymentMethod?: string): numbe
   if (c === 'NGN') return 4; // Nigeria Min: 4 USDT
   if (c === 'INR') return 2; // India Min: 2 USDT
   if (c === 'USD') {
-    const m = (paymentMethod || '').toLowerCase();
-    if (m.includes('bank')) {
-      return 50; // Bank Transfer in Global USD: Min $50
-    }
-    return 10; // Airtm in Global USD: Min $10
+    return 20; // Global USD: Min $20 (1 USDT = 0.95 USD)
   }
   return 1;
 }
@@ -131,11 +128,7 @@ export function SelectTokenPanel({
       return 1345.0; // 1 USDT = 1345 NGN (Fixed rate)
     }
     if (selectedFiatCurrency.code === 'USD') {
-      const m = (effectivePaymentMethod || '').toLowerCase();
-      if (m.includes('bank')) {
-        return 0.83; // Bank Transfer in Global USD: 1 USDT = 0.83 USD
-      }
-      return 0.95; // Airtm in Global USD: 1 USDT = 0.95 USD
+      return 0.95; // Global USD: 1 USDT = 0.95 USD
     }
     if (liveFiat && liveFiat[selectedFiatCurrency.code]) {
       return liveFiat[selectedFiatCurrency.code];
@@ -331,7 +324,7 @@ export function SelectTokenPanel({
       {isGlobalUSD ? (
         <div className="mt-3.5 space-y-2.5 text-left">
           <div className="flex items-center justify-between px-1">
-            <span className="text-[12px] font-bold text-[#0F172A]">Select USD Payout Method:</span>
+            <span className="text-[12px] font-bold text-[#0F172A]">USD Bank Payout:</span>
             <button
               type="button"
               onClick={() => setCountryModalOpen(true)}
@@ -349,62 +342,30 @@ export function SelectTokenPanel({
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
+          <div>
             <button
               type="button"
               onClick={() => {
-                handleSelectMethod('Airtm', effectivePaymentMethod === 'Airtm' ? receivingAccountNumber : '');
-                if (!receivingAccountNumber && effectivePaymentMethod !== 'Airtm') {
-                  setPaymentModalOpen(true);
-                }
+                handleSelectMethod('Bank Transfer', receivingAccountNumber);
+                setPaymentModalOpen(true);
               }}
-              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
-                effectivePaymentMethod.toLowerCase().includes('airtm')
-                  ? 'border-[#0084FF] bg-blue-50/70 shadow-xs ring-2 ring-[#0084FF]/30'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
-              }`}
+              className="w-full p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative flex flex-col justify-between border-[#004B87] bg-blue-50/70 shadow-xs ring-2 ring-[#004B87]/30 hover:bg-blue-50/90"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MethodIcon iconType="airtm" name="Airtm" className="w-6 h-6 rounded-lg text-[10px]" />
-                  <span className="font-extrabold text-[13px] text-[#0F172A]">Airtm</span>
+                <div className="flex items-center space-x-2.5">
+                  <MethodIcon iconType="bank_usd" name="Bank Transfer" className="w-8 h-8 rounded-xl text-[10px]" countryCode="global" />
+                  <div>
+                    <span className="font-extrabold text-[14px] text-[#0F172A] block leading-snug">USD Bank Transfer</span>
+                    <span className="text-[10px] text-[#64748B] font-medium">Direct Settlement via Bank Account & IBAN</span>
+                  </div>
                 </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">
-                  Min $10
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                  Min $20
                 </span>
               </div>
-              <div className="mt-2.5">
-                <div className="text-[12px] font-black text-[#0084FF]">1 USDT = 0.95 USD</div>
-                <div className="text-[10px] text-[#64748B] mt-0.5 font-medium">Instant P2P Wallet</div>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                handleSelectMethod('Bank Transfer', effectivePaymentMethod === 'Bank Transfer' ? receivingAccountNumber : '');
-                if (!receivingAccountNumber && effectivePaymentMethod !== 'Bank Transfer') {
-                  setPaymentModalOpen(true);
-                }
-              }}
-              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
-                effectivePaymentMethod.toLowerCase().includes('bank')
-                  ? 'border-[#1E3A8A] bg-indigo-50/70 shadow-xs ring-2 ring-[#1E3A8A]/30'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MethodIcon iconType="bank" name="Bank Transfer" className="w-6 h-6 rounded-lg text-[10px]" />
-                  <span className="font-extrabold text-[13px] text-[#0F172A]">Bank Transfer</span>
-                </div>
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">
-                  Min $50
-                </span>
-              </div>
-              <div className="mt-2.5">
-                <div className="text-[12px] font-black text-[#1E3A8A]">1 USDT = 0.83 USD</div>
-                <div className="text-[10px] text-[#64748B] mt-0.5 font-medium">Direct Wire / SWIFT / ACH</div>
+              <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-blue-200/60">
+                <div className="text-[13px] font-black text-[#004B87]">1 USDT = 0.95 USD</div>
+                <div className="text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Global Direct Settlement</div>
               </div>
             </button>
           </div>
@@ -416,14 +377,16 @@ export function SelectTokenPanel({
           >
             <div className="flex items-center space-x-2 min-w-0">
               <span className="text-[11px] font-semibold text-[#64748B] shrink-0">
-                {effectivePaymentMethod.toLowerCase().includes('airtm') ? 'Airtm Email/Username:' : 'USD Bank Account / IBAN:'}
+                USD Bank Account:
               </span>
-              <span className="text-xs font-mono text-[#7C3AED] font-bold truncate">
-                {receivingAccountNumber || 'Click to enter account details'}
+              <span className="text-xs font-mono text-[#004B87] font-bold truncate">
+                {receivingAccountNumber
+                  ? `${getSavedPaymentMeta('Bank Transfer')?.bankName ? `${getSavedPaymentMeta('Bank Transfer')?.bankName} • ` : ''}${receivingAccountNumber}`
+                  : 'Click to enter bank details'}
               </span>
             </div>
-            <span className="text-[11px] font-bold text-[#7C3AED] group-hover:underline shrink-0 ml-2">
-              {receivingAccountNumber ? 'Change' : 'Enter'}
+            <span className="text-[11px] font-bold text-[#004B87] group-hover:underline shrink-0 ml-2">
+              {receivingAccountNumber ? 'Edit Details' : 'Enter Details'}
             </span>
           </button>
         </div>
