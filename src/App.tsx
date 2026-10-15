@@ -967,12 +967,12 @@ function Home({ initialAuthOpen = false, initialTitle = 'Sign in' }: { initialAu
               <h4 className="font-semibold text-slate-500 text-xs tracking-wider uppercase">Help</h4>
               <div className="flex flex-col gap-3 text-slate-700">
                 <a
-                  href="https://t.me/coinbridgea"
+                  href="https://t.me/CoinBridge_Global"
                   target="_blank"
                   rel="noreferrer"
                   className="font-medium hover:text-[#5f22d9] transition-colors inline-flex items-center gap-1.5"
                 >
-                  Contact support (@coinbridgea)
+                  Contact support
                 </a>
                 <a
                   href="mailto:CoinBridgea@proton.me"
